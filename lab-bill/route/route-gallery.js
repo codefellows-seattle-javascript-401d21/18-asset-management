@@ -5,6 +5,7 @@ const bodyParser = require('body-parser').json();
 const errorHandler = require('../lib/error-handler');
 const bearerAuthMiddleware = require('../lib/bearer-auth-middleware');
 
+const ERROR_MESSAGE = 'Authorization Failed';
 
 module.exports = router => {
   
@@ -33,16 +34,28 @@ module.exports = router => {
         })
         .catch(error => errorHandler(error,response));
     })
-    .put(bearerAuthMiddleware,bodyParser,(req,res) => {
-      return Gallery.findByIdAndUpdate(req.params._id, req.body, {upsert: true, runValidators: true})
-        .then(() => res.sendStatus(204))
-        .catch(err => errorHandler(err, res));
+    .put(bearerAuthMiddleware, bodyParser, (request,response) => {
+      Gallery.findOne({
+        userId: request.user._id,
+        _id: request.params.id,
+      })
+        .then(gallery => {
+          console.log('gallery route', gallery);
+          if(!gallery) return Promise.reject(new Error('Authorization Error.'));
+          return gallery.set(request.body).save();
+        })
+        .then(() => response.sendStatus(204))
+        .catch(error => errorHandler(error, response));
     })
-    .delete(bearerAuthMiddleware,(req, res) => {
-      if (!req.params.id) errorHandler(new Error('Validation Error: ID is required to find the record you wish to delete'), res);
-      Gallery.findById(req.params.id)
-        .then(gallery => gallery.remove())
-        .then(() => res.sendStatus(204))
-        .catch(err => errorHandler(err, res));
+    .delete(bearerAuthMiddleware,(request,response) => {
+      return Gallery.findById(request.params.id)
+        .then(gallery => {
+          if(gallery.userId.toString() === request.user._id.toString())
+            return gallery.remove();
+
+          return errorHandler(new Error(ERROR_MESSAGE),response);
+        })
+        .then(() => response.sendStatus(204))
+        .catch(error => errorHandler(error,response));
     });
 };

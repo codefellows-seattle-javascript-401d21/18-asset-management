@@ -34,17 +34,17 @@ Photo.statics.upload = function(req) {
         del([`${tempDir}/${req.file.filename}`]);
 
         let photoData = {
-            name: req.body.name,
-            description: req.body.description,
-            userId: req.user._id,
-            galleryId: req.body.galleryId,
-            imageURI: data.location,
-            objectKey: data.Key,
-        }
+          name: req.body.name,
+          description: req.body.description,
+          userId: req.user._id,
+          galleryId: req.body.galleryId,
+          imageURI: data.location,
+          objectKey: data.Key,
+        };
 
-        resolve(photoData)
+        resolve(photoData);
       })
-      .catch(reject)
+      .catch(reject);
   });
 
 };

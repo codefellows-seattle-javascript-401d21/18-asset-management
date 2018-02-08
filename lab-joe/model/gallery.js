@@ -8,4 +8,4 @@ const Gallery = mongoose.Schema({
   userId: {type: mongoose.Schema.Types.ObjectId, required: true, ref:'user'},
 });
 
-module.exports = mongoose.model('gallerie',Gallery);
+module.exports = mongoose.model('galleries',Gallery);

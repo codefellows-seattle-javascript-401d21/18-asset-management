@@ -1,5 +1,3 @@
-import { upload } from '../lib/aws-sdk';
-
 'use strict';
 
 const Photo = require('../model/photo');
@@ -12,17 +10,18 @@ const tempDir = `${__dirname}/../temp`;
 const multer = require('multer');
 const upload = multer({dest: tempDir})
 
-const ERROR_MESSAGE = 'Authorization Failed';
-
 module.exports = function(router) {
 
   router.route('/photo/:id')
 
-    .post(bearer_auth_middleware, bodyParser, (req, res) => {
-      if (!req.user)  return new Error(ERROR_MESSAGE);
-      if (!req.body) return new Error('Error: Bad request');
-
+    .post(bearer_auth_middleware, bodyParser, upload.single('image'), (req, res) => {
+      Photo.upload(req)
+        .then(data => new Photo(data).save())
+        .then(img => res.status(201).json(img))
+        .catch(err => errorHandler(err,res));
     });
+
+    
 
 
 };

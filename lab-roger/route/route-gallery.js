@@ -16,7 +16,7 @@ module.exports = router => {
       
 
       request.body.userId = request.user._id;
-      console.log(request.user);
+      
 
       return new Gallery(request.body).save()
         .then(createdGallery => response.status(201).json(createdGallery))
@@ -42,9 +42,11 @@ module.exports = router => {
         .catch(error => errorHandler(error,response));
     })
     .put(bearerAuthMiddleware,bodyParser,(request,response) => {
-      Gallery.findById(request.params._id,request.body)
+      Gallery.findById(request.params.id)
         .then(gallery => {
+          
           if(gallery.userId.toString() === request.user._id.toString()){
+            
             gallery.name = request.body.name || gallery.name;
             gallery.description = request.body.description || gallery.description;
 

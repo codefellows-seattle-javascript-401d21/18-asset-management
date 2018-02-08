@@ -3,7 +3,7 @@
 const server = require('../../lib/server');
 const superagent = require('superagent');
 const auth = require('../../model/auth');
-const mocks = require('./mocks');
+const mocks = require('../lib/mocks');
 const faker = require('faker');
 require('jest');
 
@@ -15,7 +15,7 @@ describe('GET /api/v1/signin', function() {
   beforeAll(() => mocks.auth.createOne()
     .then(data => {
       this.mockUser = data;
-      console.log('this mockdata', this.mockUser.user.username, this.mockUser.password);
+      // console.log('this mockdata', this.mockUser.user.username, this.mockUser.password);
       return superagent.get(`:${process.env.PORT}/api/v1/signin`)
         .auth(`${this.mockUser.user.username}:${this.mockUser.password}`)
         .then(res => {
@@ -24,7 +24,7 @@ describe('GET /api/v1/signin', function() {
           // it('should get a resposnse status of 200', () =>{
           //   expect(this.response.)
           // })
-          console.log('this.response', this.response);
+          // console.log('this.response', this.response);
         });
     }));
   afterAll(() => server.stop());

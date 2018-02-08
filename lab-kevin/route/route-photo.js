@@ -4,6 +4,7 @@ const Photo = require('../model/photo');
 const bodyParser = require('body-parser').json();
 const bearer_auth_middleware = require('../lib/bear-auth-middleware');
 const errorHandler = require('../lib/error-handler');
+const debug = require('debug')('http:route-photo');
 
 //upload dependencies
 const tempDir = `${__dirname}/../temp`;
@@ -12,10 +13,10 @@ const upload = multer({dest: tempDir});
 
 module.exports = function(router) {
 
-
   router.route('/photo/:id?')
 
     .post(bearer_auth_middleware, bodyParser, upload.single('image'), (req, res) => {
+      debug('post', req);
       Photo.upload(req)
         .then(data => new Photo(data).save())
         .then(img => res.status(201).json(img))

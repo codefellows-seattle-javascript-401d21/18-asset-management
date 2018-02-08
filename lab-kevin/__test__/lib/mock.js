@@ -3,12 +3,17 @@
 const faker = require('faker');
 const Auth = require('../../model/auth');
 const Gallery= require('../../model/gallery');
+const tempDir = `${__dirname}/../temp`;
 const debug = require('debug')('http:mock');
+const uuid = require('uuid/v4');
+const Promise = require('bluebird');
+const fs = Promise.promisifyAll(require('fs'), {suffix: 'Prom'});
 
 const mock = module.exports = {};
 
 mock.auth = {};
 mock.gallery = {};
+mock.photo = {};
 
 mock.user = {
   username: `${faker.name.prefix()}${faker.hacker.adjective()}`.replace(/[.\s]/, ''),
@@ -65,4 +70,27 @@ mock.gallery.create_gallery = () => {
       return new_gallery;
     })
     .catch(console.error);
+};
+
+mock.photo.photo_data = () => {
+  debug('photo_data');
+  return mock.gallery.create_gallery()
+    .then(new_gallery => {
+      debug('new_gallery', new_gallery);
+      let photo_data = {
+        name: `${faker.hacker.noun()}`,
+        description: `${faker.hacker.adjective()}${faker.hacker.noun()}`,
+        user_id: new_gallery.user_data.user._id,
+        gallery_id: new_gallery.gallery._id,
+        file: `${tempDir}/${uuid()}.jpg`,
+      };
+      photo_data.user_data = new_gallery.user_data;
+      debug('photo_data', photo_data);
+      return photo_data;
+    });
+};
+
+mock.photo.write_photo = (file) => {
+  return fs.writeFileProm(file, file)
+    .catch(err => err);
 };

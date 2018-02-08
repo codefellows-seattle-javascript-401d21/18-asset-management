@@ -5,6 +5,7 @@ const path = require('path');
 const tempDir = `${__dirname}/../temp`;
 const aws3 = require('../lib/aws-sdk');
 const mongoose = require('mongoose');
+const debug = require('debug')('http:photo');
 
 
 const Photo = mongoose.Schema({
@@ -19,6 +20,7 @@ const Photo = mongoose.Schema({
 ); 
 
 Photo.statics.upload = function(req) {
+  debug('upload', req.file);
   return new Promise((resolve, reject) => {
     if(!req.file) return  reject(new Error('Multi-part form data error: missing file data'));
     if(!req.file_path) return  reject(new Error('Multi-part form data error: missing file path'));

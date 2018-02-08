@@ -29,6 +29,7 @@ module.exports = function (req, res, next) {
       .then(user => {
         if (!user) return errorHandler(ERROR_MESSAGE, res);
         req.user = user;
+        debug('req.user', req.user);
         next();
       })
       .catch(err => errorHandler(err, res));

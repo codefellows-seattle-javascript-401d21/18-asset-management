@@ -43,7 +43,6 @@ module.exports = router => {
         _id: request.params.id,
       })
         .then(gallery => {
-          console.log('gallery route', gallery)
           if(!gallery) return Promise.reject(new Error('Authorization Error.'))
           return gallery.set(request.body).save()
         })

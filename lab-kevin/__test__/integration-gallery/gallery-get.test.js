@@ -10,20 +10,24 @@ describe('GET Integration', function() {
   beforeAll(() => server.start());
   afterAll(() => server.stop());
   afterAll(mock.removeUsers);
+  afterAll(mock.removeGalleries);
 
   this.url = ':4000/api/v1';
   
   describe('Valid requests', () => {
    
+    
     beforeAll(() => {
-      this.user = mock.user;
-      return mock.createUser();
+      return mock.gallery.create_gallery()
+        .then(gallery_data => { 
+          this.gallery_data = gallery_data ;
+        });
     });
   
-    beforeAll(()=> {
-      debug('userinfo', `${this.user.username}:${this.user.password}`);
-      return  superagent.get(`${this.url}/signin`)
-        .auth(`${this.user.username}:${this.user.password}`)
+    beforeAll(() => {
+      debug('gallery_data', this.gallery_data);
+      return  superagent.get(`${this.url}/gallery/${this.gallery_data.gallery._id}`)
+        .set('Authorization', `Bearer ${this.gallery_data.user_data.user_token}`)
         .then( res => {
           this.resGet = res;
         })
@@ -32,7 +36,7 @@ describe('GET Integration', function() {
         });
     });
 
-    it('should return status code 200', () => {
+    it.only('should return status code 200', () => {
       expect(this.resGet.status).toEqual(200);
     });
 

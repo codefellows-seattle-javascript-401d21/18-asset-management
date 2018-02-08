@@ -31,7 +31,7 @@ server.start = () => {
     if(server.isOn) return reject (new Error('Server Error: Server is already running.')); 
     server.isOn = true;
     mongoose.connect(MONGODB_URI);
-    server.http = app.listen(PORT, (PORT) => console.log(`Server listening on ${PORT}`));
+    server.http = app.listen(PORT, () => console.log(`Server listening on ${PORT}`));
     return resolve(server);
   });
 };

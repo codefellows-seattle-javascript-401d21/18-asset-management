@@ -2,9 +2,9 @@
 const fs = require('fs');
 const del = require('del');
 const path = require('path');
-const tempDir = require(`${__dirname}/../temp`);
+const tempDir = `${__dirname}/../temp`;
 const aws3 = require('../lib/aws-sdk');
-const mongoose = require(mongoose);
+const mongoose = require('mongoose');
 
 
 const Photo = mongoose.Schema({

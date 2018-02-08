@@ -13,7 +13,7 @@ const upload = multer({dest: tempDir});
 module.exports = function(router) {
 
 
-  router.route('/photo/:id')
+  router.route('/photo/:id?')
 
     .post(bearer_auth_middleware, bodyParser, upload.single('image'), (req, res) => {
       Photo.upload(req)

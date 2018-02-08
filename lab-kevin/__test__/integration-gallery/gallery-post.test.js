@@ -32,10 +32,13 @@ describe('Gallery POST Integration', function() {
   
   describe('Valid requests', () => {
 
+   
+
     beforeAll(() => {
+      debug('gallery_data', this.gallery_data.user_token);
       return  superagent.post(`${this.url}/gallery`)
         .send({title: this.gallery_data.title, description: this.gallery_data.description})
-        .set('Authorization', `Bearer ${this.gallery_data.user_token}`)
+        .set('Authorization', `Bearer ${this.gallery_data.user_data.user_token}`)
         .then( res => {
           this.resPost = res;
         })

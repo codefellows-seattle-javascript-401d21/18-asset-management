@@ -7,17 +7,18 @@ const errorHandler = require('../lib/error-handler');
 
 module.exports = function(router) {
 
-  router.route('/gallery/:id')
+  router.route('/gallery/:id?')
 
     .post(bearer_auth_middleware, bodyParser, (req, res) => {
       req.body.user_id = req.user._id;
-      return new Gallery.save(req.body)
+      return new Gallery(req.body).save()
         .then(gallery => res.status(201).json(gallery))
         .catch(err => errorHandler(err, res));
     })
 
     .get(bearer_auth_middleware, (req, res) => {
       if(req.params.id){
+        debug(req.params.id, req.params.id);
         return Gallery.findById(req.params.id)
           .then(gallery => {
             if(!gallery) return new Error('Bad request');

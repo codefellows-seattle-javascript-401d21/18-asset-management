@@ -11,13 +11,13 @@ const awsS3 = require('../lib/aws-s3');
 const Photo = mongoose.Schema({
   name: {type: String, required: true},
   desc: {type: String, required: true},
-  userId: {type: mongoose.Schema.Types.objectId, ref: 'auth', required: true},
-  carId: {type: mongoose.Schema.Types.objectId, ref: 'car', required: true},
+  userId: {type: mongoose.Schema.Types.ObjectId, ref: 'auth', required: true},
+  carId: {type: mongoose.Schema.Types.ObjectId, ref: 'car', required: true},
   objectKey: {type: String, required: true, unique: true},
   imageURI: {type: String, required: true, unique: true},
 });
 
-Photo.static.upload = function (params) {
+Photo.statics.upload = function (req) {
   return new Promise((resolve, reject) => {
     if (!req.file) return reject(new Error('Multi-part Form Data Error. File not present on request.'));
     if (!req.file.path) return reject(new Error('Multi-part Form Data Error. File path not present on request.'));
@@ -31,7 +31,7 @@ Photo.static.upload = function (params) {
 
     return awsS3.uploadProm(params)
       .then(data => {
-        // del([`${tempDir}/*`]);
+        del([`${tempDir}/${req.file.filename}`]);
 
         let photoData = {
           name: req.body.name,

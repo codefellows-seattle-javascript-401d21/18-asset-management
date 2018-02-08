@@ -7,6 +7,7 @@ const faker = require('faker');
 const mock = require('../lib/mock');
 const superagent = require('superagent');
 const server = require('../../lib/server');
+const Photo = require('../../model/photo');
 const img = `${__dirname}/../lib/x.jpeg`;
 
 
@@ -94,7 +95,7 @@ describe('GET /api/v1/photo', function() {
                   });
               });
           });
-    });
+      });
   });
 
   describe('Invalid request', () => {

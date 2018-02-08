@@ -7,6 +7,7 @@ const faker = require('faker');
 const mock = require('../lib/mock');
 const superagent = require('superagent');
 const server = require('../../lib/server');
+const Photo = require('../../model/photo');
 const img = `${__dirname}/../lib/x.jpeg`;
 
 
@@ -37,7 +38,7 @@ describe('POST /api/v1/photo', function() {
               .field('name', faker.lorem.word())
               .field('desc', faker.lorem.words(4))
               .field('galleryId', `${mockGallery._id}`)
-              .attach('image', img)
+              .attach('image', img);
           })
           .then(res => {
             expect(res.status).toEqual(201);
@@ -45,8 +46,8 @@ describe('POST /api/v1/photo', function() {
             //expect(res.body).toHaveProperty('description');
             //expect(res.body).toHaveProperty('_id');
             //expect(res.body.userId).toEqual(mockAuth._id.toString());
-          })
-//          .catch(err => console.log(err));
+          });
+        //          .catch(err => console.log(err));
       });
   });
 

@@ -7,10 +7,12 @@ const debug = require('debug')('http:mock');
 
 const mock = module.exports = {};
 
-// different mocks
+/* NESTED MOCK OBJECTS */
 mock.auth = {};
 mock.gallery = {};
 
+
+/* AUTH MOCKS */
 mock.auth.createOne = () => {
   let result = {};
   result.password = faker.name.lastName();
@@ -32,7 +34,7 @@ mock.auth.createOne = () => {
     });
 };
 
-//MOCK FOR GALLERY AYY
+/* GALLERY MOCKS */
 mock.gallery.createOne = () => {
   let resultMock = {}; //variable to hold all results of the mocks
 
@@ -46,7 +48,7 @@ mock.gallery.createOne = () => {
         name: faker.internet.domainWord(),
         description: faker.lorem.words(15),
         userId: createdAuthMock.auth._id,
-      }); //vinicio - something being saved into MongoDB CAN .SAVE() HERE INSTEAD 
+      }).save(); //vinicio - something being saved into MongoDB CAN .SAVE() HERE INSTEAD 
       //IF SHIT BREAKING, REMOVE THAT GODDAMN .SAVE()
     })
     .then(gallery => {
@@ -57,4 +59,7 @@ mock.gallery.createOne = () => {
     });
 };
 
+
+/* MOCK REMOVALS */
 mock.auth.removeAll = () => Promise.all([Auth.remove()]);
+mock.gallery.removeAll = () => Promise.all([Gallery.remove()]);

@@ -1,11 +1,9 @@
 'use strict';
 
-const server = require('../../lib/server');
+const server = require('../../../lib/server');
 const superagent = require('superagent');
-const mock = require('../lib/mocks');
-const faker = require('faker');
+const mock = require('../../lib/mocks');
 const debug = require('debug')('http:auth-get.test');
-// const errorHandler = require('../../lib/error-handler');
 require('jest');
 
 describe('#auth-get GET /api/v1/signin', function () {
@@ -17,7 +15,6 @@ describe('#auth-get GET /api/v1/signin', function () {
   describe('valid input/output', () => {
     beforeAll(() =>
       mock.auth.createOne()
-        // .then(() => debug('created mock, about to assign value to this.mockAuth'))
         .then(auth => this.mockAuth = auth)
         .then(() => {
           console.log(this.mockAuth);

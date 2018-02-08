@@ -22,7 +22,6 @@ describe('Server module', () => {
 
   describe('POST /api/v1/gallery', () => {
     it('Should return a valid gallery', () => {
-      console.log(this.mockData);
       return superagent.post(`${api}`)
         .set('Authorization', `Bearer ${this.mockData.token}`)
         .send({

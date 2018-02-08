@@ -4,10 +4,10 @@ const faker = require('faker');
 const mocks = require('../lib/mocks');
 const superagent = require('superagent');
 const server = require('../../lib/server');
-const debug = require('debug')('http: gallery-post');
+const image = `${__dirname}/../lib/test.jpg`;
 require('jest');
 
-describe('POST /api/v1/gallery', function() {
+describe('POST /api/v1/photo', function() {
   beforeAll(server.start);
   beforeAll(() => mocks.auth.createOne().then(data => this.mockUser = data));
   afterAll(server.stop);
@@ -15,43 +15,39 @@ describe('POST /api/v1/gallery', function() {
   afterAll(mocks.gallery.removeAll);
 
   describe('Valid request', () => {
-    debug('valid');
-
-    it('should return a 201 CREATED status code', () => {
+    it('should return a 201 code if POST completed', () => {
       let galleryMock = null;
       return mocks.gallery.createOne()
         .then(mock => {
           galleryMock = mock;
-          console.log('mockUser', this.mockUser.token);
-          return superagent.post(`:${process.env.PORT}/api/v1/gallery`)
+          return superagent.post(`:${process.env.PORT}/api/v1/photo`)
             .set('Authorization', `Bearer ${mock.token}`)
-            .send({
-              name: faker.lorem.word(),
-              description: faker.lorem.words(4),
-            });
+            .field('name', faker.lorem.word())
+            .field('desc', faker.lorem.words(4))
+            .field('galleryId', `${galleryMock.gallery._id}`)
+            .attach('image', image);
         })
         .then(response => {
-          console.log('201 response', response.body);
           expect(response.status).toEqual(201);
           expect(response.body).toHaveProperty('name');
-          expect(response.body).toHaveProperty('description');
-          expect(response.body).toHaveProperty('_id');
+          expect(response.body).toHaveProperty('desc');
           expect(response.body.userId).toEqual(galleryMock.gallery.userId.toString());
         });
     });
-    //------------------------------------------------------------------------------------------
   });
 
   describe('Invalid request', () => {
     it('should return a 401 NOT AUTHORIZED given back token', () => {
-      return superagent.post(`:${process.env.PORT}/api/v1/gallery`)
+      return superagent.post(`:${process.env.PORT}/api/v1/photo`)
         .set('Authorization', 'Bearer BADTOKEN')
         .catch(err => expect(err.status).toEqual(401));
     });
     it('should return a 400 BAD REQUEST on improperly formatted body', () => {
-      return superagent.post(`:${process.env.PORT}/api/v1/gallery`)
+      return superagent.post(`:${process.env.PORT}/api/v1/photo`)
         .set('Authorization', `Bearer ${this.mockUser.token}`)
-        .send()
+        .field('name', faker.lorem.word())
+        .field('desc', faker.lorem.words(4))
+        .attach('image', image)
         .catch(err => expect(err.status).toEqual(400));
     });
   });

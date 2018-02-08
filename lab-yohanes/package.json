@@ -1,7 +1,7 @@
 {
-  "name": "01-basic-auth",
+  "name": "lab-hector",
   "version": "1.0.0",
-  "description": "Asset-Management AWS",
+  "description": "",
   "main": "index.js",
   "directories": {
     "lib": "lib"
@@ -10,12 +10,12 @@
     "start": "node index.js",
     "start:watch": "nodemon index.js",
     "start:debug": "DEBUG=http* nodemon index.js",
-    "test": "jest -i",
+    "test": "jest -i --verbose",
     "test:watch": "jest -i --watchAll",
     "test:debug": "DEBUG=http* jest -i",
     "lint": "eslint .",
     "lint:test": "npm run lint && npm test",
-    "start-db": "mkdir -p ./data/db && mongod --dbpath ./data/db",
+    "start-db": "mongod --dbpath ./data/db",
     "stop-db": "killall mongod"
   },
   "jest": {
@@ -38,21 +38,23 @@
       }
     }
   },
-  "author": "Yohan the DEV Don",
+  "keywords": [],
+  "author": "",
   "license": "ISC",
+  "devDependencies": {
+    "jest": "^22.1.4"
+  },
   "dependencies": {
     "bcrypt": "^1.0.3",
+    "bluebird": "^3.5.1",
     "body-parser": "^1.18.2",
     "cors": "^2.8.4",
+    "debug": "^3.1.0",
     "dotenv": "^5.0.0",
     "express": "^4.16.2",
-    "jsonwebtoken": "^8.1.1",
-    "mongoose": "^5.0.3"
-  },
-  "devDependencies": {
     "faker": "^4.1.0",
-    "jest": "^22.1.4",
-    "jest-cli": "^22.1.4",
+    "jsonwebtoken": "^8.1.1",
+    "mongoose": "^5.0.3",
     "superagent": "^3.8.2"
   }
 }

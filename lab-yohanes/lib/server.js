@@ -17,7 +17,7 @@ app.use(cors());
 app.use('/api/v1', router);
 require('../route/route-auth')(router);
 require('../route/route-gallery')(router);
-app.all('/{0,}', (request, response) => errorHandler(new Error('Path Error. Route does not exist.')));
+app.all('/{0,}', (req, res) => errorHandler(new Error('Path Error. Route does not exist.')));
 // app.use((err, req, res) => errorHandler(err, res))
 
 // Server Controls

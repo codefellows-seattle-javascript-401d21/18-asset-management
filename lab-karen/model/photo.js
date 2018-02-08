@@ -14,7 +14,7 @@ const Photo = mongoose.Schema({
   userId: {type: mongoose.Schema.Types.ObjectId, ref: 'auth', required: true},
   galleryId: {type: mongoose.Schema.Types.ObjectId, ref: 'gallery', required: true},
   objectKey: {type: String, required: true, unique: true},
-  imageRUI: {type: String, required: true, unique: true},
+  imageURI: {type: String, required: true, unique: true},
 });
 
 Photo.statics.upload = function(req) {
@@ -47,3 +47,5 @@ Photo.statics.upload = function(req) {
       .catch(reject);
   });
 };
+
+module.exports = mongoose.model('photo', Photo);

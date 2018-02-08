@@ -13,7 +13,7 @@ const upload = multer({dest: tempDir});
 
 module.exports = function(router) {
   router.get('/photos/me', bearerAuth, (req,res) => {
-    Photo.find({userId: req.user._id})
+    return Photo.find({userId: req.user._id})
       .then(photos => photos.map(photo => photo._id))
       .then(ids => res.status(200).json(ids))
       .catch(err => errorHandler(err,res));
@@ -21,7 +21,8 @@ module.exports = function(router) {
 
   router.route('/photo/:id?')
     .post(bearerAuth, bodyParser, upload.single('image'), (req, res) => {
-      Photo.upload(req)
+      console.log(Photo);
+      return Photo.upload(req)
         .then(photoData => new Photo(photoData).save())
         .then(pic => res.status(201).json(pic))
         .catch(err => errorHandler(err,res));

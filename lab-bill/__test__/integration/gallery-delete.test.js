@@ -10,7 +10,7 @@ describe('DELETE api/v1/gallery', function() {
   beforeAll(server.start);
   beforeAll(() => mocks.gallery.createOne().then(mock => {
     this.mockUser = mock;
-    console.log(this.mockUser);
+    // console.log(this.mockUser);
     return superagent.delete(`:${process.env.PORT}/api/v1/gallery/${this.mockUser.gallery._id}`)
       .set('Authorization', `Bearer ${this.mockUser.token}`)
       .then((res) => {

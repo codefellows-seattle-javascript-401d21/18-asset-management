@@ -10,7 +10,6 @@ describe('POST api/v1/photo', function() {
   beforeAll(server.start);
   beforeAll(() => mocks.gallery.createOne().then(mock => {
     this.mockUser = mock;
-    console.log(this.mockUser);
 
     return superagent.post(`:${process.env.PORT}/api/v1/photo`)
       .set('Authorization', `Bearer ${this.mockUser.token}`)

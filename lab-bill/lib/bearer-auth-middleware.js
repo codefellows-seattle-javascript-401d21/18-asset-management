@@ -7,7 +7,7 @@ const jsonWebToken = require('jsonwebtoken');
 const ERROR_MESSAGE = 'Authorization Failed';
 
 module.exports = function(request,response,next){
-  console.log(request.headers);
+  // console.log(request.headers);
   let authHeader = request.headers.authorization;
 
   if(!authHeader)

@@ -21,7 +21,7 @@ module.exports = function(router) {
 
   router.route('/photo/:id?')
     .post(bearerAuth, bodyParser, upload.single('image'), (req, res) => {
-      console.log(req.body);
+      // console.log(req.body);
       Photo.upload(req)
         // .then(console.log)
         .then(photoData => new Photo(photoData).save())

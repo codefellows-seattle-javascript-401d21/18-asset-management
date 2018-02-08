@@ -1,47 +1,56 @@
 'use strict';
 
-const Auth = require('../../model/auth');// vinicio - similar to a user
+
 const faker = require('faker');
+const User = require('../../model/auth');// vinicio - similar to a user
 const Gallery = require('../../model/gallery');
 
-// vinicio - {auth:{},gallery:{},mario:{}}
-const mocks = module.exports = {};
-mocks.auth = {};
 
-mocks.auth.createOne = () => {
+const mock = module.exports = {};
+
+
+mock.user = {};
+mock.user.createOne = () => {
   let result = {};
   result.password = faker.internet.password();
-
-  return new Auth({
+  let user = new User({
     username: faker.internet.userName(),
     email: faker.internet.email(),
-  })
-    .generatePasswordHash(result.password)
-    .then(user => result.user = user)
-    .then(user => user.generateToken())
-    .then(token => result.token = token)
-    .then(() => {
+  });
+  return user.generatePasswordHash(result.password)
+    .then(auth => {
+      result.auth = auth;
+      return auth.save();
+    })
+    .then(auth => auth.generateToken())
+    .then(token => {
+      result.token = token;
       return result;
     });
 };
 
-mocks.gallery = {};
-mocks.gallery.createOne = () => {
+mock.user.removeAll = () => Promise.all([User.remove()]);
+
+
+mock.gallery = {};
+
+mock.gallery.createOne = () => {
   let resultMock = null;
 
-  return mocks.auth.createOne()
+  return mock.user.createOne()
     .then(createdUserMock => resultMock = createdUserMock)
     .then(createdUserMock => {
       return new Gallery({
         name: faker.internet.domainWord(),
         description: faker.random.words(15),
-        userId: createdUserMock.user._id,
-      }).save(); // vinicio - something is being saved into Mongo
+        userId: createdUserMock.auth._id,
+      }).save();
     })
     .then(gallery => {
       resultMock.gallery = gallery;
-      // console.log(resultMock);
       return resultMock;
     });
 };
-mocks.auth.removeAll = () => Promise.all([Auth.remove()]);
+
+
+mock.gallery.removeAll = () => Promise.all([Gallery.remove()]);

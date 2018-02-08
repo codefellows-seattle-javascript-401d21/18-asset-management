@@ -5,7 +5,8 @@ const bcrypt = require('bcrypt');
 const crypto = require('crypto');
 const mongoose = require('mongoose');
 
-const Auth = mongoose.Schema({
+
+const User = mongoose.Schema({
   username: {type: String, required: true, unique: true},
   password: {type: String, required: true},
   email: {type: String, required: true},
@@ -13,7 +14,7 @@ const Auth = mongoose.Schema({
 }, {timestamps: true});
 
 
-Auth.methods.generatePasswordHash = function(password) {
+User.methods.generatePasswordHash = function(password) {
   if(!password) return Promise.reject(new Error('Authorization failed. Password required.'));
 
   return bcrypt.hash(password, 10)
@@ -22,7 +23,7 @@ Auth.methods.generatePasswordHash = function(password) {
     .catch(err => err);
 };
 
-Auth.methods.comparePasswordHash = function(password) {
+User.methods.comparePasswordHash = function(password) {
   return new Promise((resolve, reject) => {
     bcrypt.compare(password, this.password, (err, valid) => {
       if(err) return reject(err);
@@ -32,19 +33,17 @@ Auth.methods.comparePasswordHash = function(password) {
   });
 };
 
-Auth.methods.generateCompareHash = function() {
-  this.compareHash = crypto.randomBytes(64).toString('hex');
-  return this.save()// vinicio - making sure the compare hash (token seed) is unique
+User.methods.generateCompareHash = function() {
+  this.compareHash = crypto.randomBytes(32).toString('hex');
+  return this.save()
     .then(() => Promise.resolve(this.compareHash))
-    .catch(console.error); // This line is not very robust... potential loop
-  //.catch(() => this.generateCompareHash()); // This line is not very robust... potential loop
+    .catch(() => this.generateCompareHash()); // This line is not very robust... potential loop
 };
 
-Auth.methods.generateToken = function() {
+User.methods.generateToken = function() {
   return this.generateCompareHash()
-    .then(compareHash => {
-      // console.log(compareHash)
-      return jwt.sign({token: compareHash}, process.env.APP_SECRET)
-    })
+    .then(compareHash => jwt.sign({token: compareHash}, process.env.APP_SECRET))
     .catch(err => err);
 };
+
+module.exports = mongoose.model('auth', User);

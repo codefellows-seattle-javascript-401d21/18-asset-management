@@ -1,14 +1,16 @@
 'use strict';
 
-const Auth = require('../../model/auth');// vinicio - similar to a user
 const faker = require('faker');
-const Gallery = require('../../model/gallery');
+const Auth = require('../../model/auth.js');
+const Gallery = require('../../model/gallery.js');
 
-// vinicio - {auth:{},gallery:{},mario:{}}
-const mocks = module.exports = {};
-mocks.auth = {};
 
-mocks.auth.createOne = () => {
+const mock = module.exports = {};
+
+// Auth Mocks - One, RemoveAll
+mock.auth = {};
+
+mock.auth.createOne = () => {
   let result = {};
   result.password = faker.internet.password();
 
@@ -24,24 +26,26 @@ mocks.auth.createOne = () => {
       return result;
     });
 };
+mock.auth.removeAll = () => Promise.all([Auth.remove()]);
 
-mocks.gallery = {};
-mocks.gallery.createOne = () => {
+mock.gallery = {};
+mock.gallery.createOne = () => {
   let resultMock = null;
 
-  return mocks.auth.createOne()
+  return mock.auth.createOne()
     .then(createdUserMock => resultMock = createdUserMock)
     .then(createdUserMock => {
       return new Gallery({
         name: faker.internet.domainWord(),
         description: faker.random.words(15),
-        userId: createdUserMock.user._id,
-      }).save(); // vinicio - something is being saved into Mongo
+        userId: createdUserMock.user.id,
+      }).save(); // saved to Mongo
     })
     .then(gallery => {
       resultMock.gallery = gallery;
-      // console.log(resultMock);
       return resultMock;
     });
 };
-mocks.auth.removeAll = () => Promise.all([Auth.remove()]);
+
+
+mock.gallery.removeAll = () => Promise.all([Gallery.remove()]);

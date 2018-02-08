@@ -1,36 +1,49 @@
 'use strict';
 
+
 const faker = require('faker');
-const mocks = require('../lib/mocks');
+const mock = require('../lib/mocks.js');
 const superagent = require('superagent');
-const server = require('../../lib/server');
+const server = require('../../lib/server.js');
 require('jest');
 
 describe('PUT /api/v1/gallery', function () {
   beforeAll(server.start);
-  // beforeAll(() => mocks.auth.createOne().then(data => this.mockUser = data))
-  beforeAll(() => mocks.gallery.createOne().then(data => this.mockData = data));
+  beforeAll(() => mock.gallery.createOne().then(data => this.mockData = data));
   afterAll(server.stop);
-  afterAll(mocks.auth.removeAll);
-  afterAll(mocks.gallery.removeAll);
+  afterAll(mock.auth.removeAll);
+  afterAll(mock.gallery.removeAll);
 
   describe('Valid request', () => {
 
     it('should update an existing record', () => {
-      // console.log(this.mockData)
       let updated = {
         name: 'pajamas',
         description: 'fire trucks',
       };
-
-      return superagent.put(`:${process.env.PORT}/api/v1/gallery/${this.mockData.gallery._id}`)
+      console.log(this.mockData.token)
+      return superagent.put(`:${process.env.PORT}/api/v1/gallery/${this.mockData.gallery.id}`)
         .set('Authorization', `Bearer ${this.mockData.token}`)
         .send(updated)
         .then(res => expect(res.status).toEqual(204));
     });
   });
-
-  describe('Invalid request', () => {
-
+  describe('Invalid requests', () => {
+    it('should return a 401 with an invalid token', () => {
+      return superagent.put(`:${process.env.PORT}/api/v1/gallery/${this.mockData.gallery.id}`)
+        .set('Authorization', 'Bearer BADTOKEN')
+        .send({
+          name: faker.lorem.word(),
+        })
+        .catch(err => expect(err.status).toEqual(401));
+    });
+    it('should return a 404 status for not found', () => {
+      return superagent.put(`:${process.env.PORT}/api/v1/badpath`)
+        .set('Authorization', `Bearer ${this.mockData.token}`)
+        .send({
+          name: faker.lorem.word(),
+        })
+        .catch(err => expect(err.status).toEqual(404));
+    });
   });
 });

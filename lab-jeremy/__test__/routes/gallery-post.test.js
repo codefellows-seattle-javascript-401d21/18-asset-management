@@ -13,7 +13,6 @@ describe('POST /api/v1/gallery', function() {
   afterAll(mock.gallery.removeAll);
 
   beforeAll(() => mock.auth.createOne().then(data => this.mockUser = data));
-  // console.log(this.mockUser);
   describe('Valid request', () => {
     
     beforeAll(() => {

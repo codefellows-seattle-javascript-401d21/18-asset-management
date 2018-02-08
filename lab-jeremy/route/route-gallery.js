@@ -11,7 +11,7 @@ const ERROR_MESSAGE = 'Authorization Failed';
 module.exports = router => {
   router.route('/gallery/:id?')
     .post(bearerAuthMiddleware,bodyParser,(request,response) => {
-      request.body.userId = request.user.id;
+      request.body.userId = request.user._id;
 
       return new Gallery(request.body).save()
         .then(createdGallery => response.status(201).json(createdGallery))
@@ -27,7 +27,7 @@ module.exports = router => {
 
       return Gallery.find()
         .then(galleries => {
-          let galleriesIds = galleries.map(gallery => gallery.id);
+          let galleriesIds = galleries.map(gallery => gallery._id);
 
           response.status(200).json(galleriesIds);
         })
@@ -35,11 +35,11 @@ module.exports = router => {
     })
     .put(bearerAuthMiddleware, bodyParser, (request,response) => {
       Gallery.findOne({
-        userId: request.user.id,
-        id: request.params.id,
+        userId: request.user._id,
+        _id: request.params.id,
       })
         .then(gallery => {
-          console.log('gallery route', gallery);
+          // console.log('gallery route', gallery);
           if(!gallery) return Promise.reject(new Error('Authorization Error.'));
           return gallery.set(request.body).save();
         })
@@ -50,7 +50,7 @@ module.exports = router => {
     .delete(bearerAuthMiddleware,(request,response) => {
       return Gallery.findById(request.params.id)
         .then(gallery => {
-          if(gallery.userId.toString() === request.user.id.toString())
+          if(gallery.userId.toString() === request.user._id.toString())
             return gallery.remove();
 
           return errorHandler(new Error(ERROR_MESSAGE),response);

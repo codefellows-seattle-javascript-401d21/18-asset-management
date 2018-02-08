@@ -15,22 +15,22 @@ describe('PUT /api/v1/gallery', function () {
   afterAll(mock.gallery.removeAll);
 
   describe('Valid request', () => {
-
     it('should update an existing record', () => {
       let updated = {
         name: 'pajamas',
         description: 'fire trucks',
       };
-      console.log(this.mockData.token)
-      return superagent.put(`:${process.env.PORT}/api/v1/gallery/${this.mockData.gallery.id}`)
+      console.log('MOCK DATA FOR PUT REQ:', this.mockData);
+      return superagent.put(`:${process.env.PORT}/api/v1/gallery/${this.mockData.gallery._id}`)
         .set('Authorization', `Bearer ${this.mockData.token}`)
         .send(updated)
         .then(res => expect(res.status).toEqual(204));
     });
   });
+
   describe('Invalid requests', () => {
     it('should return a 401 with an invalid token', () => {
-      return superagent.put(`:${process.env.PORT}/api/v1/gallery/${this.mockData.gallery.id}`)
+      return superagent.put(`:${process.env.PORT}/api/v1/gallery/${this.mockData.gallery._id}`)
         .set('Authorization', 'Bearer BADTOKEN')
         .send({
           name: faker.lorem.word(),

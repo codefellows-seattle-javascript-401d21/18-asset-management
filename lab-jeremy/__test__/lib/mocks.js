@@ -35,11 +35,12 @@ mock.gallery.createOne = () => {
   return mock.auth.createOne()
     .then(createdUserMock => resultMock = createdUserMock)
     .then(createdUserMock => {
+      // console.log('created user mock:', createdUserMock)
       return new Gallery({
         name: faker.internet.domainWord(),
         description: faker.random.words(15),
-        userId: createdUserMock.user.id,
-      }).save(); // saved to Mongo
+        userId: createdUserMock.user._id,
+      }).save();
     })
     .then(gallery => {
       resultMock.gallery = gallery;

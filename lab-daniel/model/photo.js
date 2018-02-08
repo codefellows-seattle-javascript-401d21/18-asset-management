@@ -30,7 +30,7 @@ Photo.statics.upload = function (req) {
 
     return awsS3.uploadProm(params)
       .then(data => {
-        del([`${tempDir}/${req.file.originalname}`]);
+        del([`${tempDir}/${req.file.filename}`]);
 
         let photoData = {
           name: req.body.name,

@@ -1,8 +1,6 @@
 'use strict';
 
 const errorHandler = require('./error-handler');
-// const Auth = require('../model/auth');
-// const jwt = require('jsonwebtoken');
 
 //process of defining express middleware, we need ot pass in request/response AND next
 module.exports = function(req, res, next) {

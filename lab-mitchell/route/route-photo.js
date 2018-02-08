@@ -21,9 +21,10 @@ module.exports = function(router) {
 
   router.route('/photo/:id?')
   // middlewares in order, i.e. authenticate, parse body, upload single, callback
+  // at point of parsing image file, our request object should have a request.user, request.file, and request.body 
     .post(bearerAuth, bodyParser, upload.single('image'), (req, res) => {
       Photo.upload(req)
-        //now have most parts/pieces, ship off to s3, haded back as photoData
+        //now have most parts/pieces, ship off to s3, handed back as photoData
         .then(photoData => new Photo(photoData).save())
         //assuming all went well, get pic back from MongoDB
         .then(pic => res.status(201).json(pic)) //pic just object representation with data, url reference, etc to S3 bucket where stored

@@ -1,14 +1,14 @@
 'use strict';
 
 const Photo = require('../model/photo');
-const bodyParser = require('body-parser');
+const bodyParser = require('body-parser').json();
 const bearer_auth_middleware = require('../lib/bear-auth-middleware');
 const errorHandler = require('../lib/error-handler');
 
 //upload dependencies
 const tempDir = `${__dirname}/../temp`;
 const multer = require('multer');
-const upload = multer({dest: tempDir})
+const upload = multer({dest: tempDir});
 
 module.exports = function(router) {
 
@@ -19,9 +19,21 @@ module.exports = function(router) {
         .then(data => new Photo(data).save())
         .then(img => res.status(201).json(img))
         .catch(err => errorHandler(err,res));
+    })
+
+    .get(bearer_auth_middleware, (req, res) => {
+      if (req.params){
+        return Photo.findById(req.params.id)
+          .then(img => res.status(200).json(img))
+          .catch(err => errorHandler(err,res));          
+      }
+      return Photo.find({user_id: req.user.user_id})
+        .then(imgs => imgs.map(img => img._id))
+        .then(img_ids => res.status(200).json(img_ids))
+        .catch(err => errorHandler(err, res));
     });
 
-    
+
 
 
 };

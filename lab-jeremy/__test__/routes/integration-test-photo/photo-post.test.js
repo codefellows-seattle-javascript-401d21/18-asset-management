@@ -1,10 +1,10 @@
 'use strict';
 
 const faker = require('faker');
-const mocks = require('../lib/mocks');
+const mocks = require('../../lib/mocks');
 const superagent = require('superagent');
-const server = require('../../lib/server');
-const image = `${__dirname}/../lib/test.jpg`;
+const server = require('../../../lib/server');
+const image = `${__dirname}/../../lib/test.jpg`;
 require('jest');
 
 describe('POST /api/v1/photo', function() {

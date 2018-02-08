@@ -2,9 +2,9 @@
 
 
 const faker = require('faker');
-const mock = require('../lib/mocks.js');
+const mock = require('../../lib/mocks.js');
 const superagent = require('superagent');
-const server = require('../../lib/server.js');
+const server = require('../../../lib/server.js');
 require('jest');
 
 describe('PUT /api/v1/gallery', function () {
@@ -20,7 +20,7 @@ describe('PUT /api/v1/gallery', function () {
         name: 'pajamas',
         description: 'fire trucks',
       };
-      console.log('MOCK DATA FOR PUT REQ:', this.mockData);
+      // console.log('MOCK DATA FOR PUT REQ:', this.mockData);
       return superagent.put(`:${process.env.PORT}/api/v1/gallery/${this.mockData.gallery._id}`)
         .set('Authorization', `Bearer ${this.mockData.token}`)
         .send(updated)

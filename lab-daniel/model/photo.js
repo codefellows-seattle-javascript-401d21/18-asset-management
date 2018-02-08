@@ -3,7 +3,6 @@
 const fs = require('fs');
 const del = require('del');
 const path = require('path');
-const Gallery = require('./gallery');
 const mongoose = require('mongoose');
 const tempDir = `${__dirname}/../temp`;
 const awsS3 = require('../lib/aws-s3');
@@ -19,8 +18,8 @@ const Photo = mongoose.Schema({
 
 Photo.statics.upload = function (req) {
   return new Promise((resolve, reject) => {
-    if (req.file) return reject(new Error('Multi-part Form Data Error. File Not Present On Request'));
-    if (req.file.path) return reject(new Error('Multi-part Form Data Error. File Path Not Present On Request'));
+    if (!req.file) return reject(new Error('Multi-part Form Data Error. File Not Present On Request 1'));
+    if (!req.file.path) return reject(new Error('Multi-part Form Data Error. File Path Not Present On Request 2'));
   
     let params = {
       ACL: 'public-read',

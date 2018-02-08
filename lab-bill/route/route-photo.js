@@ -19,10 +19,13 @@ module.exports = function(router) {
       .catch(err => errorHandler(err, res));
   });
 
-  router.route('photo/:id?')
+  router.route('/photo/:id?')
     .post(bearerAuth, bodyParser, upload.single('image'), (req, res) => {
+      console.log(req.body);
       Photo.upload(req)
+        // .then(console.log)
         .then(photoData => new Photo(photoData).save())
+        // .then(console.log)
         .then(pic => res.status(201).json(pic))
         .catch(err => errorHandler(err, res));
     })
@@ -32,7 +35,7 @@ module.exports = function(router) {
           .then(pic => res.status(200).json(pic))
           .catch(err => errorHandler(err, res));
       }
-      Photo.find()
+      Photo.find({userID: req.query.userId})
         .then(photos => photos.map(photo => photo._id))
         .then(ids => res.status(200).json(ids))
         .catch(err => errorHandler(err, res));

@@ -24,6 +24,7 @@ module.exports = function (req, res, next) {
     }
 
     debug('jwt value', value);
+    debug('req', req);
 
     Auth.findOne({compHash: value.jwt})
       .then(user => {

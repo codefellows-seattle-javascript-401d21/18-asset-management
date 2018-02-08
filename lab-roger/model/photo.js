@@ -20,14 +20,16 @@ const Photo = mongoose.Schema({
 
 Photo.statics.upload = function(req) {
   return new Promise((resolve, reject) =>{
+    console.log('request', req.file.path);
     if(!req.file) return reject(new Error('Multi-part Form Data Error. File not present on request'));
-    if(req.file.path) return reject(new Error('Multi-part Form Data Error. File path not present on request'));
+    if(!req.file.path) return reject(new Error('Multi-part Form Data Error. File path not present on request'));
 
     let params = {
       ACL: 'public-read',
       Bucket: process.env.AWS_BUCKET,
       Key: `${req.file.filename}${path.extname(req.file.originalname)}`,
       Body: fs.createReadStream(req.file.path),
+      
     };
 
     return awsS3.uploadProm(params)

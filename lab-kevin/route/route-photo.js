@@ -12,6 +12,7 @@ const upload = multer({dest: tempDir});
 
 module.exports = function(router) {
 
+
   router.route('/photo/:id')
 
     .post(bearer_auth_middleware, bodyParser, upload.single('image'), (req, res) => {
@@ -31,9 +32,16 @@ module.exports = function(router) {
         .then(imgs => imgs.map(img => img._id))
         .then(img_ids => res.status(200).json(img_ids))
         .catch(err => errorHandler(err, res));
+    })
+
+    .delete(bearer_auth_middleware, (req, res) => {
+      Photo.findById(req.params.id)
+        .then(img => {
+          if (img.user_id !== req.user._id) return new Error('Authorization Error: permission denied');
+          return img.delete();
+        })
+        .then(() => res.statusSend(204))
+        .catch(err => errorHandler(err, res));
     });
-
-
-
 
 };

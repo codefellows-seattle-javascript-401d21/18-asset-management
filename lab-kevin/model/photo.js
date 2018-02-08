@@ -3,7 +3,7 @@ const fs = require('fs');
 const del = require('del');
 const path = require('path');
 const tempDir = require(`${__dirname}/../temp`);
-const aws3 = require('../lib/aws-sdkß');
+const aws3 = require('../lib/aws-sdk');
 const mongoose = require(mongoose);
 
 
@@ -20,8 +20,8 @@ const Photo = mongoose.Schema({
 
 Photo.statics.upload = function(req) {
   return new Promise((resolve, reject) => {
-    if(!req.file) return  reject(new Error('Multi-part form data error: missing file data'))
-    if(!req.file_path) return  reject(new Error('Multi-part form data error: missing file path'))
+    if(!req.file) return  reject(new Error('Multi-part form data error: missing file data'));
+    if(!req.file_path) return  reject(new Error('Multi-part form data error: missing file path'));
 
     let metadata =  {
       'x-amz-meta-original_filename': `${req.file.original_name}`,
@@ -50,6 +50,23 @@ Photo.statics.upload = function(req) {
         };
         resolve(photoData);
       })
+      .catch(reject);
+  });
+ 
+};
+
+Photo.methods.delete = function() {
+  return new Promise((resolve, reject) => {
+
+    let params = {
+      ACL: 'public-read',
+      Bucket: process.env.AWS_BUCKET,
+      Key: this.cloud_key,
+    };
+
+    return(aws3.deleteProm(params))
+      .then(this.remove())
+      .then(resolve)
       .catch(reject);
   });
  

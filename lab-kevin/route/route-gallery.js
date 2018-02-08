@@ -1,6 +1,6 @@
 'use strict';
 
-const bodyParser = require('body-parser').json;
+const bodyParser = require('body-parser').json();
 const Auth = require('../model/auth');
 const Gallery = require('../model/gallery');
 const bearer_auth_middleware = require('../lib/bear-auth-middleware');
@@ -10,35 +10,58 @@ const ERROR_MESSAGE = 'Authorization Failed';
 
 module.exports = function(router) {
 
-  router.route('/gallery')
-    .post(bearer_auth_middleware, bodyParser, (req, res) => {
-      if (!req.user)  return new Error(ERROR_MESSAGE);
-      if (!req.body) return new Error('Error: Bad request');
-      Gallery.save(req.body)
-        .then(gallery => res.status(201).json(gallery));
-    })
-    .get(bearer_auth_middleware, (req, res) => {
-      if(!req.params.id){
-        //do a thing
-        return;
-      }
-      //alll galleries
-      //do a thing
-    })
-    .put((bearer_auth_middleware, bodyParser, (req, res) => {
-      Gallery.find({
-        userId: req.usr._id.toString(),
-        _id: req.params.id
-      })
-      .then(gallery => {
-        if(! gallery) //error
-      })
-      //do a thing
-    })
-    .delete(bearer_auth_middleware, (req, res) => {
-      res;
-      //do a thing
-    });
+  router.route('/gallery/:id')
 
+    .post(bearer_auth_middleware, bodyParser, (req, res) => {
+      req.body.user_id = req.user._id;
+      return new Gallery.save(req.body)
+        .then(gallery => res.status(201).json(gallery))
+        .catch(err => errorHandler(err, res));
+    })
+
+    .get(bearer_auth_middleware, (req, res) => {
+      if(req.params.id){
+        return Gallery.findById(req.params.id)
+          .then(gallery => {
+            if(!gallery) return new Error('Bad request');
+            if (gallery.user_id !== req.user._id) return new Error('Authorization Failed: permission denied');
+            return res.status(200).json(gallery);
+          })
+          .catch(err => errorHandler(err, res));
+      }
+
+      return Gallery.find({
+        user_id: req.user._id,
+        _id: req.params.id,
+      })
+        .then(galleries => {
+          if(!galleries.length) return new Error('Bad request');
+          res.status(200).json(galleries.map(gallery => gallery._id));
+        })
+        .catch(err => errorHandler(err, res));
+    })
+
+    .put(bearer_auth_middleware, bodyParser, (req, res) => {
+      return Gallery.findOne({
+        user_id: req.user._id,
+        _id: req.params.id,
+      })
+        .then(gallery => {
+          if(!gallery) return new Error('Bad request');
+          if (!req.body.title && !req.body.description) return new Error('Validation Error: invalid update');
+          return gallery.set(req.body).save();
+        })
+        .catch(err => errorHandler(err, res));
+    })
+
+    .delete(bearer_auth_middleware, (req, res) => {
+      return Gallery.findById(req.params.id)
+        .then(gallery => {
+          if(!gallery) return new Error('Bad request');
+          if (gallery.user_id !== req.user._id) return new Error('Authorization Failed: permission denied');
+          return gallery.remove();
+        })
+        .catch(err => errorHandler(err, res));
+    });
 
 };

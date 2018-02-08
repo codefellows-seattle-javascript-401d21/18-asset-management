@@ -14,13 +14,13 @@ describe('POST /api/v1/photo', function() {
   afterAll(mocks.user.removeAll);
   afterAll(mocks.gallery.removeAll);
 
-  describe('Valid request', () => {
+  describe('valid post request', () => {
     it('should return a 201 code if POST completed', () => {
         expect(200).toEqual(200);
     });
   });
 
-  describe('Invalid request', () => {
+  describe('invalid post request', () => {
     it('should return a 401 NOT AUTHORIZED given back token', () => {
       return superagent.post(`:${process.env.PORT}/api/v1/photo`)
         .set('Authorization', 'Bearer BADTOKEN')

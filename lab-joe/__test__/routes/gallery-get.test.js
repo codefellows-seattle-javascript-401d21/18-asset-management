@@ -20,15 +20,15 @@ describe('GET api/v1/gallery', function() {
   beforeAll(() => mocks.gallery.createOne().then(data => this.mockGallery = data));
 
 
-  describe('Valid request', () => {
-    it('should return all user galleries', () => {
+  describe('test for valid get request', () => {
+    it('get for everything should return all of the users galleries', () => {
       return superagent.get(`:${process.env.PORT}/api/v1/gallery`)
         .set('Authorization', `Bearer ${this.mockUser.token}`)
         .then(res => {
           expect(res.status).toEqual(200);
         });
     });
-    it('should return a single gallery with an id', () => {
+    it('test to return should return a single gallery with an id', () => {
       return superagent.get(`:${process.env.PORT}/api/v1/gallery/${this.mockGallery.gallery._id}`)
         .set('Authorization', `Bearer ${this.mockUser.token}`)
         .then(res => {
@@ -37,13 +37,13 @@ describe('GET api/v1/gallery', function() {
     });
   });
   describe('Invalid request', () => {
-    it('should return a 401 NOT AUTHORIZED given back token', () => {
+    it('return a 401 NOT AUTHORIZED given back token', () => {
       return superagent.get(`:${process.env.PORT}/api/v1/gallery`)
-        .set('Authorization', 'Bearer BADTOKEN')
+        .set('Authorization', 'Bearer badtoken')
         .catch(err => expect(err.status).toEqual(401));
     });
-    it('should return a 404 with a bad ID', () => {
-      return superagent.get(`:${process.env.PORT}/api/v1/gall`)
+    it('bad id return 404', () => {
+      return superagent.get(`:${process.env.PORT}/api/v1/bad-id-gall`)
         .set('Authorization', `Bearer ${this.mockUser.token}`)
         .send({})
         .catch(err => expect(err.status).toEqual(404));

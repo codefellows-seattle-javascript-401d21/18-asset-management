@@ -12,7 +12,7 @@ describe('GET /api/v1/signup', function() {
   afterAll(mocks.user.removeAll);
 
 
-  describe('Valid req/res', () => {
+  describe('signin - valid requst and response', () => {
     beforeAll(() => {
       return mocks.user.createOne()
         .then(data => {
@@ -24,12 +24,12 @@ describe('GET /api/v1/signup', function() {
     });
   });
 
-  it('should respond with a status of 200', () => {
+  it('test for status - 200 response', () => {
     expect(this.test.status).toBe(200);
   });
-  it('should get a 401 if the user could not be authenticated', () => {
+  it('401 for no authentication', () => {
     return superagent.get(base)
-      .auth('jogn', 'hello')
+      .auth('steven', 'greeting')
       .catch(err => {
         expect(err.status).toBe(401);
       });

@@ -13,8 +13,8 @@ describe('POST /api/v1/gallery', function() {
   afterAll(mocks.user.removeAll);
   afterAll(mocks.gallery.removeAll);
 
-  describe('Valid request', () => {
-    it('should return a 201 CREATED status code', () => {
+  describe('test for valid request', () => {
+    it('valid post should return a 201 CREATED status code', () => {
       let galleryMock = null;
       return mocks.gallery.createOne()
         .then(mock => {
@@ -36,10 +36,10 @@ describe('POST /api/v1/gallery', function() {
     });
   });
 
-  describe('Invalid request', () => {
-    it('should return a 401 NOT AUTHORIZED given back token', () => {
+  describe('test for valid request', () => {
+    it('401 NOT AUTHORIZED error given back token', () => {
       return superagent.post(`:${process.env.PORT}/api/v1/gallery`)
-        .set('Authorization', 'Bearer BADTOKEN')
+        .set('Authorization', 'Bearer badtoken')
         .catch(err => expect(err.status).toEqual(401));
     });
     it('should return a 400 BAD REQUEST on improperly formatted body', () => {

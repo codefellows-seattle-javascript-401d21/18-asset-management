@@ -27,22 +27,21 @@ describe('POST /api/v1/signup', function() {
   it('should respond with a status of 201', () => {
       expect(this.response.status).toBe(201);
   });
-  it('should post a new note with username and password and email', () => {
+  it('post a new note with username and password and email', () => {
       expect(this.response.request._data).toHaveProperty('username');
-      expect(this.response.request._data).toHaveProperty('password');
       expect(this.response.request._data).toHaveProperty('email');
   });
 
 
   describe('Invalid req/res', () => {
-    it('should return a status 404 on bad path', () => {
+    it('return 404 on bad path', () => {
       return superagent.post(':4000/api/v1/doesNotExist')
         .send(mocks.user.createOne())
         .catch(err => {
           expect(err.status).toBe(404);
         });
     });
-    it('should return a status 400 on bad request body', () => {
+    it('return 400 on bad request body', () => {
       return superagent.post(base)
         .send(new User({
           username: '',

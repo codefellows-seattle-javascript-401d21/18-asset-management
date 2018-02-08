@@ -15,8 +15,8 @@ describe('DELETE /api/v1/gallery', function() {
   beforeAll(() => mocks.user.createOne().then(data => this.mockUser = data));
   beforeAll(() => mocks.gallery.createOne().then(data => this.mockGallery = data));
 
-  describe('Valid request', () => {
-    it('should return a 204 delete status code', () => {
+  describe('test for valid request', () => {
+    it('delete method should return a 204 delete status code', () => {
       let galleryMock = null;
       return mocks.gallery.createOne()
         .then(mock => {
@@ -30,14 +30,14 @@ describe('DELETE /api/v1/gallery', function() {
     });
   });
 
-  describe('Invalid request', () => {
-    it('should return a 401 given bad token', () => {
+  describe('test for invalid request', () => {
+    it('delete method on bad request (bad token) should return a 401 ', () => {
       return superagent.delete(`:${process.env.PORT}/api/v1/gallery`)
         .set('Authorization', 'Bearer BADTOKEN')
         .catch(err => expect(err.status).toEqual(401));
     });
-    it('should return a 404 no found', () => {
-      return superagent.delete(`:${process.env.PORT}/api/v1/galleryPOOP`)
+    it('fake token - return 404 should return a 404 no found', () => {
+      return superagent.delete(`:${process.env.PORT}/api/v1/gobbldeegook-gallery`)
         .set('Authorization', `Bearer ${this.mockUser.token}`)
         .catch(err => expect(err.status).toEqual(404));
     });

@@ -20,7 +20,7 @@ module.exports = function (router) {
       .catch(err => errorHandler(err, res));
   });
 
-  router.route('/photo/:id?')
+  router.route('/photo/:_id?')
     .post(bearerAuth, bodyParser, upload.single('image'), (req, res) => {
       Photo.upload(req)
         .then(data => new Photo(data).save())
@@ -29,8 +29,8 @@ module.exports = function (router) {
     })
 
     .get(bearerAuth, (req, res) => {
-      if(req.params.id) {
-        return Photo.findById(req.params.id)
+      if(req.params._id) {
+        return Photo.findById(req.params._id)
           .then(pic => res.status(200).json(pic))
           .catch(err => errorHandler(err, res));
       }

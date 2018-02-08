@@ -20,8 +20,7 @@ http POST :3000/api/v1/signup username=hector email='meh@me.com' password=whatev
 http POST :3000/api/v1/signup username=tim email='tim@blah.com' password=stuff
 
 #ID
-eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbiI6IjIyMTgxODc0NDgyMWMwNDQxM2RhODVjMzA3ZWE2ZjM0MTA3NjM3ZmVkMTQzYTgxNGVkZDA1Njc0ZjI3YzI5OThhOWYwYTU3YzUwMTAwZmQyNTBhNTZhYjJhYmMwNWZlMjIwODM0YjZlMjFlZGI4MDJlOTkyYjMxOTEwYjc1OWQxIiwiaWF0IjoxNTE3OTgyNzE1fQ.otS5wutjAcKJFuLBu1FpCiw_MOcaNenLjHPCeMSEhSU
-
+eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbiI6ImQ3YTI1YmQzZTY4NThkZDc0ZDBmOTM0OTgwZmZhZmMyMmM1MjNiZWQxZDY3YWJjYTdjOWFjOTYxMDc3ZjZlNjY5NDljYjk5NzNkNWUwMDJkOWJmZjU3ZTE5ZTBjN2UzNGMzODM4NWI2YjhjOWMzNjlhNWZlMzZiOWEyNDAwMjg2IiwiaWF0IjoxNTE4MDU3NzQwfQ.pORbFKH5jXD5P6fZdH8fLQWXqHTx2PB6G8LlEXx7Ojo
 #SIGN IN WORKS
 http -a tim:stuff :3000/api/v1/signin
 
@@ -52,3 +51,11 @@ npm install del, multer, aws-sdk
 
 AWS. & S3. & S3.config crazy API with so many 
 Look throug the docs for some dope a** tools
+
+#UPDATING GALLERY
+Token Created from original POST above
+
+http POST :3000/api/v1/gallery name='my gallery' description='new things' 'Authorization:Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbiI6ImQ3YTI1YmQzZTY4NThkZDc0ZDBmOTM0OTgwZmZhZmMyMmM1MjNiZWQxZDY3YWJjYTdjOWFjOTYxMDc3ZjZlNjY5NDljYjk5NzNkNWUwMDJkOWJmZjU3ZTE5ZTBjN2UzNGMzODM4NWI2YjhjOWMzNjlhNWZlMzZiOWEyNDAwMjg2IiwiaWF0IjoxNTE4MDU3NzQwfQ.pORbFKH5jXD5P6fZdH8fLQWXqHTx2PB6G8LlEXx7Ojo'
+
+#UPLOAD IMAGE
+http -f POST :3000/api/v1/photo image@~/Desktop/homer.jpg name=homer description='donut' galleryId='5a7bbac664b1a83961a91f76' 'Authorization:Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbiI6ImQ3YTI1YmQzZTY4NThkZDc0ZDBmOTM0OTgwZmZhZmMyMmM1MjNiZWQxZDY3YWJjYTdjOWFjOTYxMDc3ZjZlNjY5NDljYjk5NzNkNWUwMDJkOWJmZjU3ZTE5ZTBjN2UzNGMzODM4NWI2YjhjOWMzNjlhNWZlMzZiOWEyNDAwMjg2IiwiaWF0IjoxNTE4MDU3NzQwfQ.pORbFKH5jXD5P6fZdH8fLQWXqHTx2PB6G8LlEXx7Ojo'

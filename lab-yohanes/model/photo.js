@@ -25,7 +25,7 @@ Photo.statics.upload = function (request) {
     let params = {
       ACL: 'public read',
       Bucket: process.env.AWS_BUCKET,
-      key: `${request.file.filename}${path.extname(request.file.originalname)}`, //setting the file name
+      Key: `${request.file.filename}${path.extname(request.file.originalname)}`, //setting the file name
       Body: fs.createReadStream(request.file.path),
     };
     return awsS3.uploadProm(params) //ships all the data to s3

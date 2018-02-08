@@ -4,36 +4,31 @@
 const server = require('../../lib/server');
 const superagent = require('superagent');
 const mocks = require('../lib/mocks');
-const faker = require('faker');
 require('jest');
 
 // Test Variables
 let port = process.env.PORT;
-let api = `:${port}/api/v1/gallery`;
+let api = `:${port}/api/v1/photo`;
 
 describe('Server module', () => {
   beforeAll(() => server.start(port, () => console.log(`listening on ${port}`)));
-  beforeAll(() => mocks.gallery.createOne().then(mock => this.mockData = mock));
+  beforeAll(() => mocks.photo.createOne(`${__dirname}/../lib/bm.jpg`).then(mock => this.mockData = mock));
   afterAll(() => server.stop());
   afterAll(() => {
     mocks.gallery.removeAll();
     mocks.auth.removeAll();
   });
 
-  describe('POST /api/v1/gallery', () => {
-    it('Should return a valid gallery', () => {
-      console.log(this.mockData);
-      return superagent.post(`${api}`)
-        .set('Authorization', `Bearer ${this.mockData.token}`)
-        .send({
-          name: faker.lorem.word(),
-          description: faker.lorem.words(20),
-        })
-        .then(res => {          
-          expect(res.status).toBe(201);
-        });
+  describe('POST /api/v1/Photo', () => {
+    describe('Valid Routes/Data', () => {
+      it('Should return a valid photo', () => {
+        expect(this.mockData.photoRes.body).toHaveProperty('name');
+        expect(this.mockData.photoRes.body).toHaveProperty('imageURI');
+      });
+      it('Should return a valid status', () => {
+        expect(this.mockData.photoRes.status).toBe(201);
+      });
     });
-        
     describe('Invalid Routes/Data', () => {
       it('Should respond with an authorization failure if missing a password, username, or email', () => {
         return superagent.post(`${api}`)
@@ -48,7 +43,7 @@ describe('Server module', () => {
       });
     });
   });
-  describe('GET /api/v1/gallery', () => {
+  describe('GET /api/v1/Photo', () => {
     beforeAll(() => {
       return superagent.get(`${api}`)
         .set('Authorization', `Bearer ${this.mockData.token}`)
@@ -58,7 +53,7 @@ describe('Server module', () => {
       it('Should respond with a status 200', () => {
         expect(this.response.status).toBe(200);
       });
-      it('Should respond with a valid token', () => {
+      it('Should respond with a valid array of photos', () => {
         expect(Array.isArray(this.response.body)).toBeTruthy();
       });
     });
@@ -66,6 +61,7 @@ describe('Server module', () => {
     describe('Invalid Routes/Data', () => {
       it('Should respond a not found or path error when given an incorrect path', () => {
         return superagent.get(`${api}`)
+          .send()
           .catch(err => {
             this.error = err;
             expect(err.response.text).toMatch(/Authorization/);
@@ -76,9 +72,9 @@ describe('Server module', () => {
       });
     });
   });
-  describe('GET /api/v1/gallery/:_id?', () => {
+  describe('GET /api/v1/Photo/:_id?', () => {
     beforeAll(() => {
-      return superagent.get(`${api}/${this.mockData.gallery._id}`)
+      return superagent.get(`${api}/${this.mockData.photoRes.body._id}`)
         .set('Authorization', `Bearer ${this.mockData.token}`)
         .then(res => this.response = res);
     });
@@ -86,14 +82,16 @@ describe('Server module', () => {
       it('Should respond with a status 200', () => {
         expect(this.response.status).toBe(200);
       });
-      it('Should respond with a valid token', () => {
-        expect(this.response.body).toBeInstanceOf(Object);
+      it('Should respond with a valid photo', () => {
+        expect(this.response.body).toHaveProperty('name');
+        expect(this.response.body).toHaveProperty('imageURI');
       });
     });
 
     describe('Invalid Routes/Data', () => {
       it('Should respond a not found or path error when given an incorrect path', () => {
-        return superagent.get(`${api}/${this.mockData.gallery._id}`)
+        return superagent.get(`${api}/${this.mockData.photoRes.body._id}`)
+          .send()
           .catch(err => {
             this.error = err;
             expect(err.response.text).toMatch(/Authorization/);

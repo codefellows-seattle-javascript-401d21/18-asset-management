@@ -2,6 +2,8 @@
 
 const Auth = require('../../model/auth');
 const Gallery = require('../../model/gallery');
+const Photo = require('../../model/photo');
+const sa = require('superagent');
 const faker = require('faker');
 
 const mocks = module.exports = {};
@@ -46,3 +48,24 @@ mocks.gallery.createOne = () => {
 };
 
 mocks.gallery.removeAll = () => Promise.all([Gallery.remove()]);
+
+mocks.photo = {};
+mocks.photo.createOne = (filepath) => {
+  let result = {};
+  return mocks.gallery.createOne()
+    .then(data => result = data)
+    .then(() => {
+      return sa.post(`:${process.env.PORT}/api/v1/photo`)
+        .set('Authorization', `Bearer ${result.token}`)
+        .field({'name': faker.hacker.ingverb()})
+        .field({'desc': faker.lorem.words(10)})
+        .field({'galleryId': result.gallery._id.toString()})
+        .attach('image', filepath)
+        .then(res => {
+          result.photoRes = res;
+          return result;
+        });
+    });
+};
+
+mocks.photo.removeAll = () => Promise.all([Photo.remove()]);

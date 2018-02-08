@@ -46,7 +46,7 @@ describe('Gallery POST Integration', function() {
 
     describe('POST /api/v1/gallery', () => {
 
-      it('should post with 201', () => {
+      it.only('should post with 201', () => {
         expect(this.resPost.status).toEqual(201);
       });
       it('should should have a token in the response body', () => {

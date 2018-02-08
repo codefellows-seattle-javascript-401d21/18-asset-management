@@ -1,12 +1,9 @@
 'use strict';
 
 const bodyParser = require('body-parser').json();
-const Auth = require('../model/auth');
 const Gallery = require('../model/gallery');
 const bearer_auth_middleware = require('../lib/bear-auth-middleware');
 const errorHandler = require('../lib/error-handler');
-
-const ERROR_MESSAGE = 'Authorization Failed';
 
 module.exports = function(router) {
 

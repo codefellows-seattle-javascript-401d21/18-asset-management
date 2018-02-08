@@ -7,7 +7,7 @@ const errorHandler = require('../lib/error-handler');
 const bearerAuthMiddleware = require('../lib/bearer-auth-middleware');
 
 // Photo upload dependecies and setup
-const multer = require('mnulter');
+const multer = require('multer');
 const tempDir = `${__dirname}/../temp`;
 const upload = multer({dest: tempDir});
 
@@ -18,7 +18,7 @@ module.exports = function(router){
     Photo.find({userId: req.user._id})
       .then(photos => photos.map(photo => photo._id))
       .then(ids => res.status(200).json(ids))
-      .catch(err => errorHandler(err, res))
+      .catch(err => errorHandler(err, res));
   });
 
   router.route('/photo/:id?')
@@ -26,8 +26,8 @@ module.exports = function(router){
       Photo.upload(req)
         .then(photoData => new Photo(photoData).save())
         .then(pic => res.status(201).json(pic))
-        .catch(err => errorHanlder(err, res))
-    });
+        .catch(err => errorHandler(err, res));
+    })
 
     .get(bearerAuthMiddleware, (req, res) => {
       if(req.params.id){
@@ -37,8 +37,8 @@ module.exports = function(router){
       }
 
       Photo.find({userID: req.query.userId})
-        .then(photos => photo.map(photo => photo._id))
+        .then(photos => photos.map(photo => photo._id))
         .then(ids => res.status(200).json(ids))
-        .catch(err => errorHandler(err, res))
+        .catch(err => errorHandler(err, res));
     });
-}
+};

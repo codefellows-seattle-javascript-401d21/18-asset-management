@@ -34,8 +34,8 @@ module.exports = router => {
 
     .put(bearerAuthMiddleware, bodyParser, (req, res) => {
       req.body.userId = req.user._id;
-//console.log(req.body);
-//console.log(req.user);
+      //console.log(req.body);
+      //console.log(req.user);
       return Gallery.findByIdAndUpdate(req.params.id, req.body, {upsert: true, runValidators: true})
         .then(() => res.status(204).end())
         .catch(err => errorHandler(err, res));

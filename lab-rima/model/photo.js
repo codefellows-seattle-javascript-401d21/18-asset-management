@@ -3,7 +3,7 @@
 const fs = require('fs');
 const del = require('del');
 const path = require('path');
-const Gallery = require('./gallery');
+//const Gallery = require('./gallery');
 const mongoose = require('mongoose');
 const tempDir = `${__dirname}/../temp`;
 const awsS3 = require('../lib/aws-s3');
@@ -12,30 +12,30 @@ const awsS3 = require('../lib/aws-s3');
 const Photo = mongoose.Schema({
   name: {
     type: String,
-    required: true
-  }
+    required: true,
+  },
   desc: {
     type: String,
-    required: true
-  }
+    required: true,
+  },
   userId: {
     type: mongoose.Schema.Types.ObjectId, ref: 'auth',
-    required: true
-  }
+    required: true,
+  },
   galleryId: {
     type: mongoose.Schema.Types.ObjectId, ref: 'gallery',
-    required: true
-  }
+    required: true,
+  },
   objectKey: {
     type: String,
     required: true,
-    unique: true
-  }
+    unique: true,
+  },
   imageURI: {
     type: String,
     required: true,
-    unique: true
-  }
+    unique: true,
+  },
 });
 
 
@@ -53,11 +53,11 @@ Photo.statics.upload = function(req){
       Bucket: process.env.AWS_BUCKET,
       Key: `${req.file.filename}${path.extname(req.file.originalname)}`,
       Body: fs.createReadStream(req.file.path),
-    }
+    };
 
     return awsS3.uploadProm(params)
       .then(data => {
-        del([`${tempDir}/${req.file.filname}`])
+        del([`${tempDir}/${req.file.filname}`]);
 
         let photoData = {
           name: req.body.name,
@@ -66,12 +66,12 @@ Photo.statics.upload = function(req){
           galleryId: req.body.galleryId,
           imageURI: data.Location,
           objectKey: data.Key,
-        }
+        };
         resolve(photoData);
       })
       .catch(reject);
   });
-}
+};
 
 
 module.exports = mongoose.model('photo', Photo);

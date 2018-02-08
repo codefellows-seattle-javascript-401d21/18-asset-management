@@ -18,6 +18,7 @@ app.use(cors());
 app.use('/api/v1', router);
 require('../route/route-auth')(router);
 require('../route/route-gallery')(router);
+require('../route/route-photo')(router);
 app.all('/{0,}', (req, res) => errorHandler(new Error('Path Error'), res));
 
 // Server controls

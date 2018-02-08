@@ -14,8 +14,8 @@ const Gallery = mongoose.Schema({
   userId: {
     type: mongoose.Schema.Types.ObjectId,
     required: true,
-//    ref: 'user',
-    ref: 'auth'
+    //    ref: 'user',
+    ref: 'auth',
   },
 });
 

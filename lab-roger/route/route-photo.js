@@ -6,8 +6,8 @@ const errorHandler = require('../lib/error-handler');
 const bearerAuth = require('../lib/bearer-auth-middleware');
 
 const multer = require('multer');
-const tempDir = `${__dirname}/..temp`;
-const upload = multer({dst: tempDir});
+const tempDir = `${__dirname}/../temp`;
+const upload = multer({dest: tempDir});
 
 module.exports = function(router) {
   router.get('photos/me', bearerAuth, (req, res) => {
@@ -19,6 +19,7 @@ module.exports = function(router) {
 
   router.route('/photo/:id?')
     .post(bearerAuth, bodyParser, upload.single('image'), (req, res) => {
+      console.log('in route', req.body);
       Photo.upload(req)
         .then(photoData => new Photo(photoData).save())
         .then(pic => res.status(201).json(pic))

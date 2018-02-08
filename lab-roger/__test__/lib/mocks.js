@@ -1,6 +1,7 @@
 'use strict';
 
 const Auth = require('../../model/auth');
+const Gallery = require('../../model/gallery');
 const faker = require('faker');
 // const Gallery = require();
 
@@ -35,4 +36,24 @@ mocks.auth.createForPost = () => {
   postOne.email = faker.internet.email();
   return postOne;
 
+};
+
+mocks.gallery = {};
+mocks.gallery.createOne = () => {
+  let resultMock = null;
+
+  return mocks.auth.createOne()
+    .then(createdUserMock => resultMock = createdUserMock)
+    .then(createdUserMock => {
+      return new Gallery({
+        name: faker.internet.domainWord(),
+        description: faker.random.words(15),
+        userId: createdUserMock.user._id,
+      }).save(); // vinicio - something is being saved into Mongo
+    })
+    .then(gallery => {
+      resultMock.gallery = gallery;
+      // console.log(resultMock);
+      return resultMock;
+    });
 };

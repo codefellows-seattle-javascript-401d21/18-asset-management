@@ -12,14 +12,14 @@ describe('POST /api/v1/signup', function() {
 
   describe('Valid Requests', () => {
     beforeAll(() => {
-      this.mockUser = {
+      this.mockAuth = {
         username: faker.internet.userName(),
         password: faker.internet.password(),
         email: faker.internet.email(),
       };
 
       return superagent.post(`:${process.env.PORT}/api/v1/signup`)
-        .send(this.mockUser)
+        .send(this.mockAuth)
         .then(response => this.response = response)
         .catch(console.log);
     });
@@ -39,13 +39,13 @@ describe('POST /api/v1/signup', function() {
 
   describe('Invalid Requests', () => {
     it('should return a 404 NOT FOUND status code', () => {
-      this.mockUser = {
+      this.mockAuth = {
         username: faker.internet.userName(),
         password: faker.internet.password(),
         email: faker.internet.email(),
       };
       return superagent.post(`:${process.env.PORT}/api/v1/NOTFOUND`)
-        .send(this.mockUser)
+        .send(this.mockAuth)
         .catch(err => expect(err.status).toEqual(404));
     });
     it('should return a 401 NOT authORIZED status code', () => {
@@ -55,10 +55,10 @@ describe('POST /api/v1/signup', function() {
     });
     it('should return a 409 DUPLICATE KEY status when creating a user that already exists', () => {
       return superagent.post(`:${process.env.PORT}/api/v1/signup`)
-        .send(this.mockUser)
+        .send(this.mockAuth)
         .then(() => {
           return superagent.post(`:${process.env.PORT}/api/v1/signup`)
-            .send(this.mockUser);
+            .send(this.mockAuth);
         })
         .catch(err => expect(err.status).toEqual(409));
     });

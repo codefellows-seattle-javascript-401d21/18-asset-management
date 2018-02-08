@@ -8,9 +8,9 @@ require('jest');
 
 describe('POST /api/v1/library', function() {
   beforeAll(server.start);
-  beforeAll(() => mock.Auth.createOne().then(data => this.mockUser = data));
+  beforeAll(() => mock.auth.createOne().then(data => this.mockAuth = data));
   afterAll(server.stop);
-  afterAll(mock.Auth.removeAll);
+  afterAll(mock.auth.removeAll);
   afterAll(mock.library.removeAll);
 
   describe('Valid request', () => {
@@ -41,7 +41,7 @@ describe('POST /api/v1/library', function() {
     });
     it('should return a 400 BAD REQUEST on improperly formatted body', () => {
       return superagent.post(`:${process.env.PORT}/api/v1/library`)
-        .set('Authorization', `Bearer ${this.mockUser.token}`)
+        .set('Authorization', `Bearer ${this.mockAuth.token}`)
         .send({})
         .catch(err => expect(err.status).toEqual(400));
     });

@@ -1,45 +1,66 @@
 'use strict';
 
 const Auth = require('../../model/auth');
-const faker = require('faker');
 const Library = require('../../model/library');
+// const Photo = require('../../model/photo');
+const faker = require('faker');
 
 const mock = module.exports = {};
-mock.auth = {};
 
+mock.auth = {};
 mock.auth.createOne = () => {
-  let result = {};
-  result.password = faker.internet.password();
+  let resultAuth = {};
+  resultAuth.password = faker.internet.password();
 
   return new Auth({
     username: faker.internet.userName(),
     email: faker.internet.email(),
   })
-    .generatePasswordHash(result.password)
-    .then(user => result.user = user)
+    .generatePasswordHash(resultAuth.password)
+    .then(user => resultAuth.user = user)
     .then(user => user.generateToken())
-    .then(token => result.token = token)
+    .then(token => resultAuth.token = token)
     .then(() => {
-      return result;
+      return resultAuth;
     });
 };
+mock.auth.removeAll = () => Promise.all([Auth.remove()]);
 
 mock.library = {};
 mock.library.createOne = () => {
-  let resultMock = null;
+  let resultLibrary = null;
 
-  return mock.Auth.createOne()
-    .then(createdUserMock => resultMock = createdUserMock)
-    .then(createdUserMock => {
+  return mock.auth.createOne()
+    .then(mockLibrary => resultLibrary = mockLibrary)
+    .then(mockLibrary => {
       return new Library({
-        name: faker.internet.domainWord(),
+        name: faker.internet.domainName(),
         description: faker.random.words(15),
-        userId: createdUserMock.user._id,
+        userId: mockLibrary.user._id,
       }).save();
     })
     .then(library => {
-      resultMock.library = library;
-      return resultMock;
+      resultLibrary.library = library;
+      return resultLibrary;
     });
 };
-mock.Auth.removeAll = () => Promise.all([Auth.remove()]);
+mock.library.removeAll = () => Promise.all([Library.remove()]);
+
+// mock.photo = {};
+// mock.photo.createOne = () => {
+//   let resultPhoto = null;
+//   return mock.library.createOne()
+//     .then(mockPhoto => resultPhoto => mockPhoto)
+//     .then(mockPhoto => {
+//       return new Photo({
+//         name: faker.internet.domainName(),
+//         desc:  faker.random.words(15),
+//         libraryId: mockPhoto.user._id,
+//       }).save();
+//     })
+//     .then(photo => {
+//       resultPhoto.photo = photo;
+//       return resultPhoto;
+//     });
+// };
+// mock.photo.removeAll = () => Promise.all([Photo.remove()]);

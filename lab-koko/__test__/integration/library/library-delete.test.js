@@ -6,7 +6,7 @@ const mock = require('../../lib/mock');
 
 describe('DELETE /api/v1/library/:id?', () => {
   beforeAll(server.start);
-  beforeAll(() => mock.Auth.createOne().then(data => this.mockUser = data));
+  beforeAll(() => mock.auth.createOne().then(data => this.mockAuth = data));
   afterAll(server.stop);
   afterAll(mock.auth.removeAll);
   afterAll(mock.library.removeAll);
@@ -38,7 +38,7 @@ describe('DELETE /api/v1/library/:id?', () => {
     });
     it('should return a 404 BAD PATH for a valid request made with an id that was not found', () => {
       return superagent.delete(`:${process.env.PORT}/api/v1/library/BADPATH}`)
-        .set('Authorization', `Bearer ${this.mockUser.token}`)
+        .set('Authorization', `Bearer ${this.mockAuth.token}`)
         .catch(err => expect(err.status).toEqual(404));
     });
   });

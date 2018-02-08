@@ -9,9 +9,9 @@ require('jest');
 
 describe('PUT /api/v1/library/:id?', function() {
   beforeAll(server.start);
-  beforeAll(() => mock.Auth.createOne().then(data => this.mockUser = data));
+  beforeAll(() => mock.auth.createOne().then(data => this.mockAuth = data));
   afterAll(server.stop);
-  afterAll(mock.Auth.removeAll);
+  afterAll(mock.auth.removeAll);
   afterAll(mock.library.removeAll);
 
   describe('Valid request', () => {

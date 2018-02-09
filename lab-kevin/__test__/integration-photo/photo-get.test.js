@@ -1,6 +1,6 @@
 'use strict';
 
-const debug = require('debug')('http:gallery-post-test');
+const debug = require('debug')('http:photo-get-test');
 const server = require('../../lib/server');
 const superagent = require('superagent');
 const mock = require('../lib/mock');
@@ -30,16 +30,16 @@ describe('GET Integration', function() {
         });
     });
   
-    // beforeAll(() => {
-    //   return  superagent.get(`${this.url}/photoy/${this.gallery_data.gallery._id}`)
-    //     .set('Authorization', `Bearer ${this.gallery_data.user_data.user_token}`)
-    //     .then( res => {
-    //       this.resGet = res;
-    //     })
-    //     .catch(err => {
-    //       debug('superagent error ', err);
-    //     });
-    // });
+    beforeAll(() => {
+      return  superagent.get(`${this.url}/photo/${this.photo_id}`)
+        .set('Authorization', `Bearer ${this.photo.user.token}`)
+        .then( res => {
+          this.resGet = res;
+        })
+        .catch(err => {
+          debug('superagent error ', err);
+        });
+    });
 
     it.only('should return status code 200', () => {
       debug ('this.photo', this.photo);

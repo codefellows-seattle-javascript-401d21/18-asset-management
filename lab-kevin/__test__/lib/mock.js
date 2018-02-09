@@ -77,8 +77,13 @@ mock.photo.create_photo = () => {
   let reqPhoto = {};
   return mock.photo.photo_data()
     .then(photo_data => {
-      reqPhoto.user = {_id: photo_data.user_id},
-      reqPhoto.file =  {originalname: photo_data.file.split('/').slice(-1)};
+      let uuid_name = uuid();
+      reqPhoto.user = {_id: photo_data.user_id.toString()},
+      reqPhoto.file =  {
+        filename: uuid_name,
+        path: `${tempProdDir}/${uuid_name}`,
+        originalname: photo_data.file.split('/').slice(-1).join(''),
+      };
       reqPhoto.body = {
         name: photo_data.name,
         description: photo_data.description,
@@ -87,8 +92,8 @@ mock.photo.create_photo = () => {
       return photo_data;
     })
     .then(photo_data => {
-      debug('photo_data', photo_data);
-      return fs.copyFileProm(photo_data.file, tempProdDir);
+      debug('reqPhoto', reqPhoto);
+      return fs.copyFileProm(photo_data.file, reqPhoto.file.path);
     })
     .then(() => reqPhoto);
 };

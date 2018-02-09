@@ -3,7 +3,6 @@
 const fs = require('fs')
 const del = require('del')
 const path = require('path')
-const Gallery = require('./gallery')
 const mongoose = require('mongoose')
 const tempDir = `${__dirname}/../temp`
 const awsS3 = require('../lib/aws-s3')
@@ -45,6 +44,19 @@ Photo.statics.upload = function(req) {
 
         resolve(photoData)
       })
+      .catch(reject)
+  })
+}
+Photo.methods.delete = function() {
+  new Promise((resolve, reject) => {
+    let params = {
+      Bucket: process.env.AWS_BUCKET,
+      Key: this.objectKey,
+    }
+
+    return awsS3.deleteProm(params)
+      .then(() => this.remove())
+      .then(resolve)
       .catch(reject)
   })
 }

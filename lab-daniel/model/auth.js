@@ -26,7 +26,7 @@ Auth.methods.comparePasswordHash = function (password) {
   debug('<<<<CPH Start>>>>');
   return new Promise((resolve, reject) => {
     bcrypt.compare(password, this.password, (err, valid) => {
-      if(err) return reject(err);
+      // if(err) return reject(err);
       if(!valid) return reject(new Error('Authorization Failure: Incorrect Password Or Username.'));
       resolve(this);
     });
@@ -37,8 +37,8 @@ Auth.methods.generateCompareHash = function () {
   debug('>>>>GCH Start<<<<');
   this.compareHash = crypto.randomBytes(32).toString('hex');
   return this.save()
-    .then(() => Promise.resolve(this.compareHash))
-    .catch(() => this.generateCompareHash());
+    .then(() => Promise.resolve(this.compareHash));
+  // .catch(() => this.generateCompareHash());
 };
 
 Auth.methods.generateToken = function () {

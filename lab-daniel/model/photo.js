@@ -18,8 +18,8 @@ const Photo = mongoose.Schema({
 
 Photo.statics.upload = function (req) {
   return new Promise((resolve, reject) => {
-    if (!req.file) return reject(new Error('Multi-part Form Data Error. File Not Present On Request 1'));
-    if (!req.file.path) return reject(new Error('Multi-part Form Data Error. File Path Not Present On Request 2'));
+    // if (!req.file) return reject(new Error('Multi-part Form Data Error. File Not Present On Request'));
+    // if (!req.file.path) return reject(new Error('Multi-part Form Data Error. File Path Not Present On Request'));
   
     let params = {
       ACL: 'public-read',

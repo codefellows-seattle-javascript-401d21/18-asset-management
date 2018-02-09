@@ -69,8 +69,32 @@ describe('Server module', () => {
             expect(err.response.text).toMatch(/Authorization/);
           });
       });
+      it('Should respond a not found or path error when given an incorrect path', () => {
+        return superagent.get(`${api}/signin`)
+          .auth('', this.mockUser.pw)
+          .catch(err => {
+            this.error = err;
+            expect(err.response.text).toMatch(/Authorization/);
+          });
+      });
+      it('Should respond a not found or path error when given an incorrect path', () => {
+        return superagent.get(`${api}/signin`)
+          .auth(this.mockUser.username, '')
+          .catch(err => {
+            this.error = err;
+            expect(err.response.text).toMatch(/Authorization/);
+          });
+      });
       it('Should respond a 401 bad path when given an incorrect path', () => {
         expect(this.error.status).toBe(401);
+      });
+      it('Should respond a not found or path error when given an incorrect path', () => {
+        return superagent.get(`${api}/signin`)
+          .auth(this.mockUser.userName, 'incorrectpassword')
+          .catch(err => {
+            this.error = err;
+            expect(err.response.text).toMatch(/Authorization/);
+          });
       });
     });
   });

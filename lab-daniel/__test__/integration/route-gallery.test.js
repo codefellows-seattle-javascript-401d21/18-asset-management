@@ -14,6 +14,7 @@ let api = `:${port}/api/v1/gallery`;
 describe('Server module', () => {
   beforeAll(() => server.start(port, () => console.log(`listening on ${port}`)));
   beforeAll(() => mocks.gallery.createOne().then(mock => this.mockData = mock));
+  beforeAll(() => mocks.gallery.createOne().then(mock => this.mockDataTwo = mock));
   afterAll(() => server.stop());
   afterAll(() => {
     mocks.gallery.removeAll();
@@ -100,6 +101,111 @@ describe('Server module', () => {
       });
       it('Should respond a 401 bad path when given an incorrect path', () => {
         expect(this.error.status).toBe(401);
+      });
+    });
+  });
+  describe('PUT /api/v1/gallery/:_id?', () => {
+    beforeAll(() => {
+      return superagent.put(`${api}/${this.mockData.gallery._id}`)
+        .set('Authorization', `Bearer ${this.mockData.token}`)
+        .send({name: 'testupdate'})
+        .then(res => this.response = res)
+        .then(() => {
+          return superagent.get(`${api}/${this.mockData.gallery._id}`)
+            .set('Authorization', `Bearer ${this.mockData.token}`)
+            .then(res => this.updated = res);
+        });
+    });
+    describe('Valid Routes/Data', () => {
+      it('Should respond with a status 204', () => {
+        expect(this.response.status).toBe(204);
+      });
+      it('Should respond with a valid token', () => {
+        expect(this.updated.body.name).toBe('testupdate');
+      });
+    });
+
+    describe('Invalid Routes/Data', () => {
+      it('Should respond an Authorization Error', () => {
+        return superagent.put(`${api}/${this.mockData.gallery._id}`)
+          .catch(err => {
+            this.error = err;
+            expect(err.response.text).toMatch(/Authorization/);
+          });
+      });
+      it('Should respond a 401 bad path when given an incorrect path', () => {
+        expect(this.error.status).toBe(401);
+      });
+      it('Should respond an Authorization Error', () => {
+        return superagent.put(`${api}/${this.mockData.gallery._id}`)
+          .set('Authorization', `Bearer ${this.mockDataTwo.token}`)
+          .send({name: 'notvalid'})
+          .catch(err => {
+            expect(err.response.text).toMatch(/Authorization/);
+          });
+      });
+      it('Should respond an Authorization Error', () => {
+        return superagent.put(`${api}`)
+          .set('Authorization', `Bearer ${this.mockData.token}`)
+          .send({ name: 'notvalid' })
+          .catch(err => {
+            expect(err.response.text).toMatch(/Authorization/);
+          });
+      });
+    });
+  });
+  describe('DELETE /api/v1/gallery/:_id?', () => {
+    beforeAll(() => {
+      return superagent.del(`${api}/${this.mockData.gallery._id}`)
+        .set('Authorization', `Bearer ${this.mockData.token}`)
+        .then(res => this.response = res)
+        .then(() => {
+          return superagent.get(`${api}/${this.mockData.gallery._id}`)
+            .set('Authorization', `Bearer ${this.mockData.token}`)
+            .then(res => this.updated = res);
+        });
+    });
+    describe('Valid Routes/Data', () => {
+      it('Should respond with a status 204', () => {
+        expect(this.response.status).toBe(204);
+      });
+      it('Should respond with a valid token', () => {
+        expect(this.updated.body).toBeNull();
+      });
+    });
+
+    describe('Invalid Routes/Data', () => {
+      it('Should respond an Authorization Error', () => {
+        return superagent.del(`${api}/${this.mockData.gallery._id}`)
+          .catch(err => {
+            this.error = err;
+            expect(err.response.text).toMatch(/Authorization/);
+          });
+      });
+      it('Should respond a 401 bad path when given an incorrect path', () => {
+        expect(this.error.status).toBe(401);
+      });
+      it('Should respond an Authorization Error', () => {
+        return superagent.del(`${api}/${this.mockDataTwo.gallery._id}`)
+          .set('Authorization', `Bearer ${this.mockData.token}`)
+          .catch(err => {
+            expect(err.response.text).toMatch(/Authorization/);
+          });
+      });
+      it('Should respond an Authorization Error', () => {
+        return superagent.del(`${api}`)
+          .set('Authorization', `Bearer ${this.mockData.token}`)
+          .catch(err => {
+            expect(err.response.text).toMatch(/Authorization/);
+          });
+      });
+      it('Should respond an Authorization Error', () => {
+        return superagent.del(`${api}/${this.mockData.gallery._id}`)
+          .set('Authorization', `Bearer ${this.mockData.token}`)
+          .catch(err => {
+            this.error = err;
+            expect(err.response.text).toMatch(/Authorization/);
+          });
       });
     });
   });

@@ -27,8 +27,7 @@ module.exports = function (req, res, next) {
 
         req.user = user;
         next();
-      })
-      .catch(err => errorHandler(err, res));
+      });
   });
 
 };

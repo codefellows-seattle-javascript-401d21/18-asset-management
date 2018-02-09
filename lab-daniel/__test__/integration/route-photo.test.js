@@ -41,6 +41,16 @@ describe('Server module', () => {
       it('Should respond a 401 for missing required information', () => {
         expect(this.error.status).toBe(401);
       });
+      it('Should return an Authorization Error', () => {
+        return superagent.post(`${api}`)
+          .field({name: 'stuff'})
+          .field({desc: 'test' })
+          .field({galleryId: this.mockData.gallery._id.toString()})
+          .catch(err => {
+            this.error = err;
+            expect(err.response.text).toMatch(/Authorization/);
+          });
+      });
     });
   });
   describe('GET /api/v1/Photo', () => {
@@ -89,7 +99,7 @@ describe('Server module', () => {
     });
 
     describe('Invalid Routes/Data', () => {
-      it('Should respond a not found or path error when given an incorrect path', () => {
+      it('Should respond a authorization error when no token is provided', () => {
         return superagent.get(`${api}/${this.mockData.photoRes.body._id}`)
           .send()
           .catch(err => {
@@ -99,6 +109,14 @@ describe('Server module', () => {
       });
       it('Should respond a 401 bad path when given an incorrect path', () => {
         expect(this.error.status).toBe(401);
+      });
+      it('Should respond a authorization error when provided with an invalid id', () => {
+        return superagent.get(`${api}/invalidid`)
+          .send()
+          .catch(err => {
+            this.error = err;
+            expect(err.response.text).toMatch(/Authorization/);
+          });
       });
     });
   });

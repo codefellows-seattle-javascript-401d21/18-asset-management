@@ -115,4 +115,13 @@ X-Powered-By: Express
     "userId": "5a7be461aa190c144210a083"
 }
 
+File Delete
+http DELETE :3000/api/v1/photo/5a7cfb884ff3a7034c9484da 'Authorization:Bearer token'
+HTTP/1.1 204 No Content
+Access-Control-Allow-Origin: *
+Connection: keep-alive
+Date: Fri, 09 Feb 2018 01:52:47 GMT
+ETag: W/"a-bAsFyilMr4Ra1hIU5PyoyFRunpI"
+X-Powered-By: Express
+
 Colloaorator(s):

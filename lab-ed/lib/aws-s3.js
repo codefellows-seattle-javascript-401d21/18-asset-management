@@ -9,3 +9,9 @@ uploads.uploadProm = function(params) {
     s3.upload(params, (err, data) => err ? reject(err) : resolve(data))
   })
 }
+
+uploads.deleteProm = function(params) {
+  return new Promise((resolve, reject) => {
+    s3.deleteObject(params, (err, data) => err ? reject(err) : resolve(data))
+  })
+}

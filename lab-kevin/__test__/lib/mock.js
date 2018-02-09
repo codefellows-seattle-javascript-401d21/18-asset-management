@@ -78,7 +78,7 @@ mock.photo.create_photo = () => {
   return mock.photo.photo_data()
     .then(photo_data => {
       let uuid_name = uuid();
-      reqPhoto.user = {_id: photo_data.user_id.toString()},
+      reqPhoto.user = {token: photo_data.user_data.user_token},
       reqPhoto.file =  {
         filename: uuid_name,
         path: `${tempProdDir}/${uuid_name}`,

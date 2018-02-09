@@ -5,6 +5,7 @@ const server = require('../../lib/server');
 const superagent = require('superagent');
 const mock = require('../lib/mock');
 const Auth = require('../../model/auth');
+const del = require('del');
 require('jest');
 
 describe('Gallery POST Integration', function() {
@@ -18,12 +19,11 @@ describe('Gallery POST Integration', function() {
     return mock.photo.photo_data()
       .then(photo_data => {
         this.photo_data = photo_data;
-        mock.photo.write_photo(photo_data.file);
       })
       .catch(console.error);
   });
   
-  this.url = ':4000/api/v1';
+  this.url = `:${process.env.PORT}/api/v1`;
   
   describe('Valid requests', () => {
 
@@ -32,18 +32,20 @@ describe('Gallery POST Integration', function() {
         .set('Authorization', `Bearer ${this.photo_data.user_data.user_token}`)
         .field('name', this.photo_data.name)
         .field('description', this.photo_data.description)
-        .field('gallery_id', `${this.photo_data.gallery_id}`)
+        .field('gallery_id', this.photo_data.gallery_id)
         .attach('image', this.photo_data.file)
         .then( res => {
           this.resPost = res;
         })
-        //.catch(console.error);
+        .catch(err => err);
     });
 
+    afterAll(() => {
+      del(this.photo_data.file);
+    });
 
     describe('POST /api/v1/photo', () => {
       it.only('should post with 201', () => {
-        debug('this.resPost', this.resPost);
         expect(this.resPost.status).toEqual(201);
       });
       it('should should have a token in the response body', () => {
@@ -65,7 +67,6 @@ describe('Gallery POST Integration', function() {
             expect(user.email).toEqual(this.user.email);
           })
           .catch(console.error);
-
       });
 
     });

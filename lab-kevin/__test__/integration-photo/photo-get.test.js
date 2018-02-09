@@ -1,9 +1,11 @@
 'use strict';
 
-const debug = require('debug')('http:auth-get-test');
+const debug = require('debug')('http:gallery-post-test');
 const server = require('../../lib/server');
 const superagent = require('superagent');
 const mock = require('../lib/mock');
+const Auth = require('../../model/auth');
+const del = require('del');
 require('jest');
 
 describe('GET Integration', function() {
@@ -12,30 +14,35 @@ describe('GET Integration', function() {
   afterAll(mock.removeUsers);
   afterAll(mock.removeGalleries);
 
-  this.url = ':4000/api/v1';
+
+  this.url = `:${process.env.PORT}/api/v1`;
   
+  // afterAll(() => {
+  //   del(this.photo_data.file);
+  // });
+ 
   describe('Valid requests', () => {
    
     beforeAll(() => {
-      return mock.gallery.create_gallery()
-        .then(gallery_data => { 
-          this.gallery_data = gallery_data ;
+      return mock.photo.create_photo()
+        .then(photo => { 
+          this.photo = photo;
         });
     });
   
-    beforeAll(() => {
-      debug('gallery_data', this.gallery_data);
-      return  superagent.get(`${this.url}/gallery/${this.gallery_data.gallery._id}`)
-        .set('Authorization', `Bearer ${this.gallery_data.user_data.user_token}`)
-        .then( res => {
-          this.resGet = res;
-        })
-        .catch(err => {
-          debug('superagent error ', err);
-        });
-    });
+    // beforeAll(() => {
+    //   return  superagent.get(`${this.url}/photoy/${this.gallery_data.gallery._id}`)
+    //     .set('Authorization', `Bearer ${this.gallery_data.user_data.user_token}`)
+    //     .then( res => {
+    //       this.resGet = res;
+    //     })
+    //     .catch(err => {
+    //       debug('superagent error ', err);
+    //     });
+    // });
 
     it.only('should return status code 200', () => {
+      debug ('this.photo', this.photo);
       expect(this.resGet.status).toEqual(200);
     });
 

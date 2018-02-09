@@ -10,14 +10,19 @@ const debug = require('debug')('http:route-photo');
 const tempDir = `${__dirname}/../temp`;
 const multer = require('multer');
 const upload = multer({dest: tempDir});
+//const upload = multer({dest: tempDir}).single('image');
+//const reqLog = require('../lib/req-logger');
+
+debug('tempDir', tempDir);
 
 module.exports = function(router) {
 
   router.route('/photo/:id?')
 
     .post(bearer_auth_middleware, bodyParser, upload.single('image'), (req, res) => {
-      debug('post', req);
-      Photo.upload(req)
+      // upload(req, res, err => err ? debug('multer error', err) : debug('cool'));
+      debug('photo post', 'req');
+      return Photo.upload(req)
         .then(data => new Photo(data).save())
         .then(img => res.status(201).json(img))
         .catch(err => errorHandler(err,res));
@@ -36,7 +41,7 @@ module.exports = function(router) {
     })
 
     .delete(bearer_auth_middleware, (req, res) => {
-      Photo.findById(req.params.id)
+      Photo.findById(req.params.id) //find one
         .then(img => {
           if (img.user_id !== req.user._id) return new Error('Authorization Error: permission denied');
           return img.delete();

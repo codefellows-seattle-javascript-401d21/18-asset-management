@@ -24,13 +24,11 @@ module.exports = function (req, res, next) {
     }
 
     debug('jwt value', value);
-    debug('req', req);
 
     Auth.findOne({compHash: value.jwt})
       .then(user => {
         if (!user) return errorHandler(ERROR_MESSAGE, res);
         req.user = user;
-        debug('req.user', req.user);
         next();
       })
       .catch(err => errorHandler(err, res));

@@ -4,8 +4,11 @@ const bodyParser = require('body-parser').json();
 const Gallery = require('../model/gallery');
 const bearer_auth_middleware = require('../lib/bear-auth-middleware');
 const errorHandler = require('../lib/error-handler');
+const debug  = require('debug')('http:route-gallery');
 
 module.exports = function(router) {
+
+  debug('route_gallery');
 
   router.route('/gallery/:id?')
 
@@ -18,13 +21,13 @@ module.exports = function(router) {
 
     .get(bearer_auth_middleware, (req, res) => {
       if(req.params.id){
-        debug(req.params.id, req.params.id);
         return Gallery.findById(req.params.id)
           .then(gallery => {
             if(!gallery) return new Error('Bad request');
             if (gallery.user_id !== req.user._id) return new Error('Authorization Failed: permission denied');
-            return res.status(200).json(gallery);
+            return gallery;
           })
+          .then(gallery => res.status(200).json(gallery))
           .catch(err => errorHandler(err, res));
       }
 

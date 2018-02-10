@@ -1,10 +1,8 @@
 'use strict'
 
-const faker = require('faker')
 const mocks = require('../lib/mocks')
 const superagent = require('superagent')
 const server = require('../../lib/server')
-require('jest')
 
 describe('PUT /api/v1/gallery', function () {
   beforeAll(server.start)
@@ -15,14 +13,12 @@ describe('PUT /api/v1/gallery', function () {
   afterAll(mocks.gallery.removeAll)
 
   describe('Valid request', () => {
-
     it('should update an existing record', () => {
       // console.log(this.mockData)
       let updated = {
         name: 'wat?',
         description: 'cDosRun',
       }
-
       return superagent.put(`:${process.env.PORT}/api/v1/gallery/${this.mockData.gallery._id}`)
         .set('Authorization', `Bearer ${this.mockData.token}`)
         .send(updated)
@@ -31,6 +27,10 @@ describe('PUT /api/v1/gallery', function () {
   });
 
   describe('Invalid request', () => {
-
+    it('should return a 401 NOT AUTHORIZED given back token', () => {
+      return superagent.put(`:${process.env.PORT}/api/v1/gallery`)
+        .set('Authorization', 'Bearer wat?')
+        .catch(err => expect(err.status).toEqual(401))
+    })
   })
 })

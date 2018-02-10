@@ -4,7 +4,6 @@ const faker = require('faker')
 const mocks = require('../lib/mocks')
 const superagent = require('superagent')
 const server = require('../../lib/server')
-require('jest')
 
 describe('POST /api/v1/gallery', function() {
   beforeAll(server.start)
@@ -14,9 +13,6 @@ describe('POST /api/v1/gallery', function() {
   //afterAll(mocks.gallery.removeAll)
 
   describe('Valid request', () => {
-    //------------------------------------------------------------------------------------------
-    // vinicio - I added this code to show you how to use mocks in conjunction with bearer auth
-    //------------------------------------------------------------------------------------------
     it('should return a 201 CREATED status code', () => {
       let galleryMock = null
       return mocks.gallery.createOne()

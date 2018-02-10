@@ -3,7 +3,6 @@
 const mocks = require('../lib/mocks')
 const superagent = require('superagent')
 const server = require('../../lib/server')
-require('jest')
 
 describe('PUT /api/v1/gallery', function () {
   beforeAll(server.start)
@@ -14,14 +13,12 @@ describe('PUT /api/v1/gallery', function () {
   afterAll(mocks.gallery.removeAll)
 
   describe('Valid request', () => {
-
     it('should update an existing record', () => {
       // console.log(this.mockData)
       let updated = {
         name: 'wat?',
         description: 'cDosRun',
       }
-
       return superagent.put(`:${process.env.PORT}/api/v1/gallery/${this.mockData.gallery._id}`)
         .set('Authorization', `Bearer ${this.mockData.token}`)
         .send(updated)

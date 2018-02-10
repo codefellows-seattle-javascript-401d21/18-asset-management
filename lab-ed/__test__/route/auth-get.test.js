@@ -4,7 +4,6 @@ const server = require('../../lib/server')
 const superagent = require('superagent')
 const mocks = require('../lib/mocks')
 
-
 describe('GET /api/v1/signin', function () {
   beforeAll(server.start)
   afterAll(server.stop)

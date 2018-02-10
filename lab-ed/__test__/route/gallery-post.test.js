@@ -4,7 +4,6 @@ const faker = require('faker')
 const mocks = require('../lib/mocks')
 const superagent = require('superagent')
 const server = require('../../lib/server')
-require('jest')
 
 describe('POST /api/v1/gallery', function() {
   beforeAll(server.start)

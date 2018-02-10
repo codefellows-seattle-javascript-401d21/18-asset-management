@@ -1,6 +1,5 @@
 'use strict'
 
-const faker = require('faker')
 const mocks = require('../lib/mocks')
 const superagent = require('superagent')
 const server = require('../../lib/server')
@@ -31,6 +30,10 @@ describe('PUT /api/v1/gallery', function () {
   });
 
   describe('Invalid request', () => {
-
+    it('should return a 401 NOT AUTHORIZED given back token', () => {
+      return superagent.put(`:${process.env.PORT}/api/v1/gallery`)
+        .set('Authorization', 'Bearer BADTOKEN')
+        .catch(err => expect(err.status).toEqual(401))
+    })
   })
 })

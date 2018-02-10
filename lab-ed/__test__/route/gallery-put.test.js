@@ -29,7 +29,7 @@ describe('PUT /api/v1/gallery', function () {
   describe('Invalid request', () => {
     it('should return a 401 NOT AUTHORIZED given back token', () => {
       return superagent.put(`:${process.env.PORT}/api/v1/gallery`)
-        .set('Authorization', 'Bearer BADTOKEN')
+        .set('Authorization', 'Bearer wat?')
         .catch(err => expect(err.status).toEqual(401))
     })
   })

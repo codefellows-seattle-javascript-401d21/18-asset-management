@@ -5,7 +5,6 @@ const superagent = require('superagent')
 const mocks = require('../lib/mocks')
 const image = `${__dirname}/../../assets/iceland.jpg`
 console.log(image)
-require('jest')
 
 describe('GET api/v1/photo', function() {
   beforeAll(server.start)

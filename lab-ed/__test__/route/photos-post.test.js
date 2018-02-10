@@ -32,7 +32,7 @@ describe('POST /api/v1/photo', function() {
   describe('Invalid request', () => {
     it('should return a 401 unauthorized if bad token', () => {
       return superagent.post(`:${process.env.PORT}/api/v1/photo`)
-        .set('Authorization', 'Bearer BADTOKEN')
+        .set('Authorization', 'Bearer wat?')
         .catch(err => expect(err.status).toEqual(401))
     })
     it('should return a 400 validation error', () => {

@@ -11,6 +11,24 @@ describe('POST /api/v1/photo', function() {
   afterAll(mocks.auth.removeAll)
   afterAll(mocks.gallery.removeAll)
 
+  describe('Valid request', () => {
+    it('should return a 201 CREATED status code', () => {
+      return mocks.gallery.createOne()
+        .then(mock => {
+          return superagent.post(`:${process.env.PORT}/api/v1/photo`)
+            .set('Authorization', `Bearer ${mock.token}`)
+            .field('name', faker.name.firstName())
+            .field('desc', faker.hacker.ingverb())
+            .field('galleryId', `${mock.gallery._id}`)
+            .attach('image', image)
+        })
+        .then(res => {
+          expect(res.status).toEqual(201)
+          expect(res.body).toHaveProperty('name')
+        })
+    })
+  })
+
   describe('Invalid request', () => {
     it('should return a 401 unauthorized if bad token', () => {
       return superagent.post(`:${process.env.PORT}/api/v1/photo`)

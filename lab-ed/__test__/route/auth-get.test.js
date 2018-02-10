@@ -3,8 +3,7 @@
 const server = require('../../lib/server')
 const superagent = require('superagent')
 const mocks = require('../lib/mocks')
-//const faker = require('faker')
-require('jest')
+
 
 describe('GET /api/v1/signin', function () {
   beforeAll(server.start)
@@ -66,15 +65,11 @@ describe('GET /api/v1/signin', function () {
         .catch(err => expect(err.status).toEqual(401))
     })
     it('should return a 401 NOT AUTHORIZED given malformed auth headers', () => {
-      let encoded = Buffer.from(`${this.mockData.user.username}:`).toString('base64')
-
       return superagent.get(`:${process.env.PORT}/api/v1/signin`)
         .set('Authorization', 'Basic')
         .catch(err => expect(err.status).toEqual(401))
     })
     it('should return a 401 NOT AUTHORIZED given missing auth headers', () => {
-      let encoded = Buffer.from(`${this.mockData.user.username}:`).toString('base64')
-
       return superagent.get(`:${process.env.PORT}/api/v1/signin`)
         .catch(err => expect(err.status).toEqual(401))
     })

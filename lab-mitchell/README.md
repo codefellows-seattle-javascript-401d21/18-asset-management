@@ -15,23 +15,35 @@ This file `server.js` in the `lib/` directory is home to the application's serve
 
 ### Routes
 **Route-auth**
-The `route/` directory contains a single file, `route-auth.js`, which exports a single anonymous function expecting a single `router` argument. The exported file has CRUD methods mounted on the router to the `/signup` and `/signin` endpoints. `POST` incorporates the `body-parser` middleware for the purposes described above. `GET` incorporates the custom `basicAuth` middleware to validate authorization for retreival of information.
+The `route/` directory contains a file, `route-auth.js`, which exports a single anonymous function expecting a single `router` argument. The exported file has CRUD methods mounted on the router to the `/signup` and `/signin` endpoints. `POST` incorporates the `body-parser` middleware for the purposes described above. `GET` incorporates the custom `basicAuth` middleware to validate authorization for retreival of information.
 
 **Route-gallery**
+The `route/` directory contains a file, `route-gallery.js`, which exports a single anonymous function expecting a single `router` argument. The exported file has CRUD methods mounted on the router to the `/gallery/:_id?` endpoint. All of the CRUD methods include both the `bearerAuth` custom middleware to validate authorization, and all but `DELETE` utilize the `bodyParser` middleware.
+
+**Route-photo**
+
 
 ### Model
 **Auth**
-The `model/` directory contains a single `Schema`, `auth.js`, which exports a `mongoose` model to store in the DB. It has `username`, `password`, `email`, and `compareHash` properties which are all required except for that last, and values are expected to be in the form of strings. There are 4 methods attached to the `Auth` schema:
+The `model/` directory contains a `Schema`, `auth.js`, which exports a `mongoose` model to store in the DB. It has `username`, `password`, `email`, and `compareHash` properties which are all required except for that last, and values are expected to be in the form of strings. There are 4 methods attached to the `Auth` schema:
 * `generatePasswordHash(password)` expects a single password argument, and utilizes `bcrypt` to hash and store a reference to the original password entered by the user. This allows the application to toss the original plain-text password, and store only the hash. If there is no password passed as an argument, the method will return a Promise rejection passing on an `Authorization` error.
 * `comparePasswordHash(password)` expects a single password argument, and utilizes `bcrypt` to compare a stored password hash for an `Auth` schema instance with the password supplied in an HTTP request. If the password hashes match, it will return a Promise resolve and allow the application to proceed. If `bcrypt` does not return `valid` as the result of the comparison, the function will reject a new `Authorization` error.
 * `generateCompareHash()` expects no arguments, and uses `crypto` to generate and save a compareHash to be stored on the `Auth` instance as the value of the property on the schema.
 * `generateToken()` expects no arguments, and uses `jwt` to create and return a token to the user that will accompany future requests in the same session of the application.
 
 **Gallery**
+The `model/` directory a contains a `Schema`, `gallery.js`, which exports a `mongoose` model to store in the DB. It has `name`, `description`, and `userId` properties which are all required.
+
+**Photo**
 
 ### Middleware
+**AWS-S3**
+
 **Basic-Auth-Middleware**
 The file `basic-auth-middlware.js` in the `lib/` directory exports a single anonymous function expecting three arguments, `req`, `res`, and `next`. It validates that there are authorization headers accompanying HTTP requests, as well as the presence of both `username` and `password` information sent along in those headers. On success, it calls next at the end of the function to continue the processing of the request. 
+
+**Bearer-Auth-Middleware**
+The file `bearer-auth-middlware.js` in the `lib/` directory exports a single anonymous function expecting three arguments, `req`, `res`, and `next`. It validates that there are authorization headers accompanying HTTP requests, as well as the presence of a `JWT` token. It utilizes `jwt` to verify the token with respect to the `APP_SECRET` environment variable, and if that passes it will call `findOne()` on the `Auth` schema to locate the schema with a matching `compareHash` property to the verified token. If none are found, it will return an authorization error, `401`, and on success it will call `next()`.
 
 **Error-handler**
 The file `error-handler.js` in the `lib/` directory exports a single anonymous function expecting two arguments, `err` and `res`. It has a number of switch cases, which respond with different status codes depending on the text of the error message they receive. 

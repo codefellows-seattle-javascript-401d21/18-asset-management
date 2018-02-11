@@ -9,7 +9,7 @@ module.exports = function (err, res) { //error happened elsewhere, parse out err
   //rather than parsing out msg which we define elsewhere, could just take status code and attach it as new property to error objct as opposed to having to create new swtich statement cases for each error type below
   switch (true) { //setting to true so it will run every time
   //generates response up one layer in REQ/RES cycle
-  case msg.includes('validation error'): return res.status(400).send(`${err.name}: ${err.message}`);
+  case msg.includes('validation'): return res.status(400).send(`${err.name}: ${err.message}`);
   case msg.includes('authorization'): return res.status(401).send(`${err.name}: ${err.message}`); //401 not authorized
   case msg.includes('path error'): return res.status(404).send(`${err.name}: ${err.message}`);
     // case msg.includes('enoent'): return res.status(404).send(`${err.name}: ${err.message}`);

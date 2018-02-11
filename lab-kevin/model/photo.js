@@ -61,7 +61,6 @@ Photo.methods.delete = function() {
   return new Promise((resolve, reject) => {
 
     let params = {
-      ACL: 'public-read',
       Bucket: process.env.AWS_BUCKET,
       Key: this.cloud_key,
     };

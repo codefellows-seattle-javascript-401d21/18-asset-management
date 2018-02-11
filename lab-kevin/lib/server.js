@@ -28,7 +28,7 @@ const server = module.exports = {};
 
 server.start = () => {
   return new Promise((resolve, reject) => {
-    if(server.isOn) return reject (new Error('Server Error: Server is already running.')); 
+    if(server.isOn) return reject(new Error('Server Error: Server is already running.')); 
     server.isOn = true;
     mongoose.connect(MONGODB_URI);
     server.http = app.listen(PORT, () => console.log(`Server listening on ${PORT}`));
@@ -38,12 +38,13 @@ server.start = () => {
 
 server.stop = () => {
   return new Promise((resolve, reject) => {
-    if(!server.isOn) return reject (new Error('Server Error: Server is already stopped.')); 
-    server.http.close(() => {
-      server.isOn = false;
-      mongoose.disconnect();
+    if(!server.isOn) return reject(new Error('Server Error: Server is already stopped.')); 
+    server.isOn = false; 
+    server.http.close(() => { 
       console.log('Server has stopped listening');
-      return resolve(); 
+      setTimeout( function () {
+        mongoose.disconnect(() => console.log('Mongoose connection closed'));
+      }, 500);
     });
   });
 };

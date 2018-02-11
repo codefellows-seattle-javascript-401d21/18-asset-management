@@ -19,14 +19,18 @@ mock.auth = {};
 mock.gallery = {};
 mock.photo = {};
 
-mock.user = {
-  username: `${faker.name.prefix()}${faker.hacker.adjective()}`.replace(/[.\s]/, ''),
-  email: `${faker.internet.email()}`,
-  password:`${faker.hacker.adjective()}${faker.hacker.noun()}`.replace(/[.\s]/, ''),
+mock.new_user = () => {
+  return {
+    username: `${faker.name.prefix()}${faker.hacker.adjective()}`.replace(/[.\s]/, ''),
+    email: `${faker.internet.email()}`,
+    password:`${faker.hacker.adjective()}${faker.hacker.noun()}`.replace(/[.\s]/, ''),
+  };
 };
 
 mock.auth.createUser = () => {
   let auth_data = {};
+  mock.user = mock.new_user();
+  debug('mock.user', mock.user);
   auth_data.password = mock.user.password;
   let newUser = Auth({username: mock.user.username, email: mock.user.email});
   return newUser.createHashedpassword(auth_data.password)
@@ -37,7 +41,7 @@ mock.auth.createUser = () => {
       auth_data.user_token = token;
       return auth_data;
     })
-    .catch(console.err);
+    .catch(err => err);
 };
 
 mock.removeUsers = () => Promise.all([Auth.remove()]); 
@@ -90,23 +94,21 @@ mock.photo.create_photo = () => {
         description: photo_data.description,
         gallery_id: photo_data.gallery_id,
       };
-      return photo_data;
-    })
-    .then(photo_data => {
-      debug('reqPhoto', reqPhoto);
-      return fs.copyFileProm(photo_data.file, reqPhoto.file.path);
+      mock.photo.data = photo_data;
+      return;
     })
     .then(() => {
-      Photo.upload(reqPhoto);
-      debug('reqPhoto',reqPhoto);
+      return fs.copyFileProm(mock.photo.data.file, reqPhoto.file.path);
+    })
+    .then(() => {
+      return Photo.upload(reqPhoto)
+        .then(data => new Photo(data).save())
+        .then(photo => {
+          mock.photo.data.photo = photo;
+          return mock.photo.data;
+        });
     });
 };
-
-// req.file.path
-// req.file.originalname
-// req.file.filename
-// req.body.description
-// req.body.gallery_id,
 
 mock.photo.photo_data = () => {
   return mock.gallery.create_gallery()
@@ -122,12 +124,27 @@ mock.photo.photo_data = () => {
       return mock.photo.write_photo(photo_data);
     })
     .catch(err => err);
-
 };
 
 mock.photo.write_photo = (data) => {
   let file = data.file;
   return fs.writeFileProm(file, file)
     .then(() => data)
+    .catch(err => err);
+};
+
+mock.photo.find_photo = (id) => {
+  return Photo.findOne(id);
+};
+
+mock.gallery.find_gallery = (id) => {
+  return Gallery.findOne(id);
+};
+
+mock.gallery.delete_one_gallery = (id) => {
+  return Gallery.findOne(id)
+    .then(gallery => {
+      if (gallery) gallery.remove();
+    })
     .catch(err => err);
 };

@@ -42,12 +42,23 @@ describe('NOTE unit testing', function() {
       expect(this.auth.password).not.toEqual(this.password);
     });
 
-    it('should return true when comparing hashed password to original with the comparePasswords method', () => {
+    it('should return the record  when comparing hashed password to original with the comparePasswords method when true', () => {
       this.auth.comparePasswords(this.password)
         .then(valid => {
-          expect(valid).toBe(true);
+          expect(valid.username).toEqual(this.mockItem.username);
         });
     });
+  
+    it('should return an undefined when hashed password does not match original with the comparePasswords method', () => {
+      return this.auth.comparePasswords('crazy')
+        .catch(err => expect(err.message).toMatch(/authorization/i));
+    });
+
+    it('should return an error when the password is an object with the comparePasswords method', () => {
+      this.auth.comparePasswords({id:'a'})
+        .catch(err => expect(err.message).toMatch(/data and hash/i));
+    });
+
   }); 
 
   describe('Test object', function() {

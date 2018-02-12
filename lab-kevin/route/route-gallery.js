@@ -60,8 +60,11 @@ module.exports = function(router) {
     })
 
     .delete(bearer_auth_middleware, (req, res) => {
+      // return Gallery.findOne({
+      //   user_id: req.user._id,
+      //   _id: req.params.id,
+      // })
       return Gallery.findOne({
-        user_id: req.user._id,
         _id: req.params.id,
       })
         .then(gallery => {

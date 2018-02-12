@@ -4,13 +4,15 @@ const basicAuth = require('../../lib/basic-auth-middleware');
 const mock = require('../lib/mock');
 const debug = require('debug')('http:basic-auth-unit-test');
 
+debug('basic-auth-middleware'); 
+
 describe('Basic Auth unit testing', function() {  
 
   this.res = { status: function(stat){this.statusCode = stat; return this; }, send: function(msg){this.message  = msg; return this;}};
 
   this.next = (req, res) => {
     this.authReq = req;
-    this.authReqs= res;
+    this.authRes= res;
   };
 
   beforeAll(() => {

@@ -16,7 +16,7 @@ describe('Basic Auth unit testing', function() {
   };
 
   beforeAll(() => {
-    this.user = mock.new_user()
+    this.user = mock.new_user();
     let basic = Buffer.from(`${this.user.username}:${this.user.password}`).toString('base64');
     this.req = {
       headers: {

@@ -24,7 +24,7 @@ describe('PUT Integration', function() {
     });
 
     beforeAll(()=> {
-      debug('this.gallery_data', this.gallery_data )
+      debug('this.gallery_data', this.gallery_data );
       this.mock_data = {title: 'Hello', description: 'Funkn-A'};
       return  superagent.put(`${this.url}/gallery/${this.gallery_data.gallery._id}`)
         .set('Authorization', `Bearer ${this.gallery_data.user_data.user_token}`)

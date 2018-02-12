@@ -35,6 +35,11 @@ module.exports = function(router) {
     .get(bearer_auth_middleware, (req, res) => {
       if (req.params.id){
         return Photo.findById(req.params.id)
+          .then(img=> {
+            if(!img) return Promise.reject(new Error('Error ENOENT: Not Found'));
+            if (img.user_id.toString() !== req.user._id.toString()) return Promise.reject(new Error('Authorization Failed: permission denied'));
+            return img;
+          })
           .then(img => res.status(200).json(img))
           .catch(err => errorHandler(err,res));          
       }

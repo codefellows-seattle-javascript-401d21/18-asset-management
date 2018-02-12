@@ -1,4 +1,4 @@
-# Lab 18 ~ Bearer Authorization
+# Lab 18 ~ Asset Management
 
 **Author**: Mitchell
 **Version**: 1.0.0
@@ -21,7 +21,7 @@ The `route/` directory contains a file, `route-auth.js`, which exports a single 
 The `route/` directory contains a file, `route-gallery.js`, which exports a single anonymous function expecting a single `router` argument. The exported file has CRUD methods mounted on the router to the `/gallery/:_id?` endpoint. All of the CRUD methods include both the `bearerAuth` custom middleware to validate authorization, and all but `DELETE` utilize the `bodyParser` middleware.
 
 **Route-photo**
-
+The `route/` directory contains a file, `route-photo.js`, which exports a single anonymous function expecting a single `router` argument. The exported file has CRUD methods mounted on the router to the `/gallery/:_id?` endpoint. Both the `GET` and `POST` CRUD methods use the `bearerAuth` custom middleware to validate authorization, and only the `POST` utilizes the `bodyParser` middleware.
 
 ### Model
 **Auth**
@@ -35,9 +35,12 @@ The `model/` directory contains a `Schema`, `auth.js`, which exports a `mongoose
 The `model/` directory a contains a `Schema`, `gallery.js`, which exports a `mongoose` model to store in the DB. It has `name`, `description`, and `userId` properties which are all required.
 
 **Photo**
+The `model/` directory a contains a `Schema`, `photo.js`, which exports a `mongoose` model to store in the DB and AWS-S3. It has `name`, `description`, `userId`, `galleryId`, `objectKey` and `imageURI` properties, all of which are required. The last two also need to be unique. It has a single static method attached to the `Schema`.
+* `upload(req)` expects a single `req` parameter, and returns a new `Promise` that uploads a photo utilizing `fs` and `awsS3` to the AWS S3 service.
 
 ### Middleware
 **AWS-S3**
+The file `aws-s3.js` in the `lib/` directory contains a single anonymous function on the exported `uploads` object, expecting a single `params` argument. It returns a new `Promise` and utilizes the `s3.upload()` method from the `aws-sdk` package. 
 
 **Basic-Auth-Middleware**
 The file `basic-auth-middlware.js` in the `lib/` directory exports a single anonymous function expecting three arguments, `req`, `res`, and `next`. It validates that there are authorization headers accompanying HTTP requests, as well as the presence of both `username` and `password` information sent along in those headers. On success, it calls next at the end of the function to continue the processing of the request. 
@@ -50,10 +53,12 @@ The file `error-handler.js` in the `lib/` directory exports a single anonymous f
 
 
 ## Credits and Collaborations
+* [AWS-SDK Docs](https://aws.amazon.com/documentation/sdk-for-javascript/) ~ https://aws.amazon.com/documentation/sdk-for-javascript/
 * [Bcrypt Docs](https://www.npmjs.com/package/bcrypt) ~ https://www.npmjs.com/package/bcrypt
 * [Body Parser Docs](https://www.npmjs.com/package/body-parser) ~ https://www.npmjs.com/package/body-parser
 * [Cors Docs](https://www.npmjs.com/package/cors) ~ https://www.npmjs.com/package/cors
 * [Crypto Docs](https://nodejs.org/api/crypto.html) ~ https://nodejs.org/api/crypto.html
+* [Del Docs](https://www.npmjs.com/package/del) ~ https://www.npmjs.com/package/del
 * [Dotenv Docs](https://www.npmjs.com/package/dotenv) ~ https://www.npmjs.com/package/dotenv
 * [ESLint Docs](https://www.npmjs.com/package/eslint) ~ https://www.npmjs.com/package/eslint
 * [Express Docs](http://expressjs.com/en/4x/api.html) ~ http://expressjs.com/en/4x/api.html
@@ -61,3 +66,5 @@ The file `error-handler.js` in the `lib/` directory exports a single anonymous f
 * [JWT - JSON Web Token Docs](https://www.npmjs.com/package/jsonwebtoken) ~ https://www.npmjs.com/package/jsonwebtoken
 * [MongoDB](https://docs.mongodb.com/) ~ https://docs.mongodb.com/
 * [Mongoose Docs](http://mongoosejs.com/docs/guide.html) ~ http://mongoosejs.com/docs/guide.html
+* [Multer Docs](https://www.npmjs.com/package/multer) ~ https://www.npmjs.com/package/multer
+* [Path Docs](https://nodejs.org/api/path.html) ~ https://nodejs.org/api/path.html

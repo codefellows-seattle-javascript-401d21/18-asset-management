@@ -19,7 +19,7 @@ module.exports = function(router) {
       .catch(err => errorHandler(err, res));
   });
 
-  router.route('/photo/:id?')
+  router.route('/photo/:_id?')
   // middlewares in order, i.e. authenticate, parse body, upload single, callback
   // at point of parsing image file, our request object should have a request.user, request.file, and request.body 
     .post(bearerAuth, bodyParser, upload.single('image'), (req, res) => {
@@ -31,8 +31,8 @@ module.exports = function(router) {
         .catch(err => errorHandler(err, res));
     })
     .get(bearerAuth, (req, res) => {
-      if(req.params.id) { //use .id no ._id b/c on line 22, the params is referencing what is specified in the route above
-        return Photo.findById({userId: req.params.id})
+      if(req.params._id) { //use ._id no ._id b/c on line 22, the params is referencing what is specified in the route above
+        return Photo.findById({userId: req.params._id})
           .then(pic => res.status(200).json(pic))
           .catch(err => errorHandler(err, res));
       }

@@ -2,15 +2,13 @@
 
 const server = require('../../lib/server');
 
-
 describe('Server tests', function(){
 
   beforeAll(() => server.start());
-  afterAll(() => server.stop());
 
   describe('Server errors', () => {
 
-    it('Should throw error on re-server', () => {
+    it('Should throw error on restart of server', () => {
       return server.start().catch((err) => {
         expect(err.message).toMatch(/running/i);
       });

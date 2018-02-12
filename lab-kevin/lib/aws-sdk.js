@@ -2,6 +2,9 @@
 
 const AWS = require('aws-sdk');
 const s3 = new  AWS.S3();
+const debug = require('debug')('http:aws-s3');
+
+debug('AWS');
 
 const aws3 = module.exports = {};
 

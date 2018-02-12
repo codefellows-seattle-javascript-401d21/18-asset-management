@@ -4,7 +4,6 @@ const Gallery = require('../../model/gallery');
 const mock = require('../lib/mock');
 const debug = require('debug')('http:Auth-unit-test');
 const server = require('../../lib/server');
-//const Auth = require('../../model/Auth'); 
 
 describe('Gallery unit testing', function() {
   beforeAll(() => server.start());

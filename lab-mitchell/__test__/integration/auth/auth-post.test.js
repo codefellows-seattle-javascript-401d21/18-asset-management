@@ -11,6 +11,8 @@ describe('#auth-post /api/v1/signup', function () {
   beforeAll(server.start);
   afterAll(server.stop);
   afterAll(mock.auth.removeAll);
+  afterEach(mock.auth.removeAll);
+
 
   describe('valid input/output', () => {
     beforeAll(() => {

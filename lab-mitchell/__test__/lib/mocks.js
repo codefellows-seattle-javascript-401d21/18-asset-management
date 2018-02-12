@@ -11,7 +11,6 @@ const mock = module.exports = {};
 mock.auth = {};
 mock.gallery = {};
 
-
 /* AUTH MOCKS */
 mock.auth.createOne = () => {
   let result = {};
@@ -58,7 +57,6 @@ mock.gallery.createOne = () => {
       return resultMock;
     });
 };
-
 
 /* MOCK REMOVALS */
 mock.auth.removeAll = () => Promise.all([Auth.remove()]);

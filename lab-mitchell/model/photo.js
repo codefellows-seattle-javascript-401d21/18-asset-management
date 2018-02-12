@@ -3,11 +3,11 @@
 const fs = require('fs'); //nodeJS
 const del = require('del'); //NPM
 const path = require('path'); //NodeJS, parses out filename and extension from a path, so we don't have to worry about parsing it ourself
-const Gallery = require('../model/gallery');
+// const Gallery = require('../model/gallery');
 const mongoose = require('mongoose');
 const tempDir = `${__dirname}/../temp`;
 const awsS3 = require('../lib/aws-s3');
-const debug = require('debug')('http:photo');
+// const debug = require('debug')('http:photo');
 
 const Photo = mongoose.Schema({
   name: {type: String, required: true}, //comes from request

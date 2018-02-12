@@ -5,7 +5,7 @@ const superagent = require('superagent');
 const mock = require('../../lib/mocks');
 const faker = require('faker');
 const photo = `${__dirname}/../../lib/dino.jpg`;
-const debug = require('debug')('http:photo-get.test');
+// const debug = require('debug')('http:photo-get.test');
 require('jest');
 
 describe('#photo GET /api/v1/photo', function () {

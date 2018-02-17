@@ -1,4 +1,4 @@
-># Lab 17: Bearer Auth
+># Lab 18: Bearer Auth
 
  A basic express server with basic authorization middleware and get and post routes for basic for signup/signin functionality and a mongodb for persistance.  Bearer authentication is used in conjunction with a JSON web token for keeping users signed in for creating, reading, editing, and deleting galleries.  Photos can be added, requested, and deleted with POST, GET, and DELETE, as well.  Image data is stored in a mongodb and the files are stored on an AWS S# server.  A developer must have an AWS Server Account to set up and use this project.
 
